@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PizzaPickup : MonoBehaviour
@@ -18,7 +16,7 @@ public class PizzaPickup : MonoBehaviour
     {
         if (isEquipped)
         {
-            if (Input.GetKeyDown(KeyCode.Q))
+            if (Input.GetKeyDown(KeyCode.Q) || Input.GetButtonDown("ControllerDrop"))
             {
                 Drop();
             }
@@ -29,7 +27,7 @@ public class PizzaPickup : MonoBehaviour
     {
         if (other.gameObject.tag == "Player" && !isEquipped)
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetButtonDown("ControllerEquip"))
             {
                 Equip();
             }

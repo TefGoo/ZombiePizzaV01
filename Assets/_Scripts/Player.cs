@@ -12,23 +12,14 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        Vector2 inputVector = new Vector2(0, 0);
+        // Keyboard/Mouse input
+        Vector2 inputVector = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
-        if (Input.GetKey(KeyCode.W))
+        // Controller input
+        Vector2 controllerInputVector = new Vector2(Input.GetAxis("ControllerHorizontal"), Input.GetAxis("ControllerVertical"));
+        if (controllerInputVector.magnitude > inputVector.magnitude)
         {
-            inputVector.y = +1;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            inputVector.x = -1;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            inputVector.y = -1;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            inputVector.x = +1;
+            inputVector = controllerInputVector;
         }
 
         if (!isAttacking)
@@ -47,19 +38,30 @@ public class Player : MonoBehaviour
         isWalking = moveDir != Vector3.zero;
 
         float rotateSpeed = 10f;
-        transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
+        if (moveDir != Vector3.zero)
+        {
+            transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
+        }
 
+        // Keyboard/Mouse input
         isRunning = Input.GetKey(KeyCode.LeftShift);
 
+        // Controller input
+        isRunning = isRunning || Input.GetButton("ControllerRun");
+
+        // Keyboard/Mouse input
         isCrouching = Input.GetKey(KeyCode.C);
 
-        if (Input.GetMouseButtonDown(0))
+        // Controller input
+        isCrouching = isCrouching || Input.GetButton("ControllerCrouch");
+
+        if (Input.GetMouseButtonDown(0) || Input.GetButtonDown("ControllerAttack"))
         {
             isAttacking = true;
             // Trigger attack animation here
             Debug.Log("Attack animation started");
         }
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) || Input.GetButtonUp("ControllerAttack"))
         {
             isAttacking = false;
             // Stop attack animation here

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SpawnOnTrigger : MonoBehaviour
 {
-    public KeyCode spawnKey;
+    public string spawnButton;
     public GameObject prefab;
     public Transform spawnPoint;
 
@@ -26,7 +26,7 @@ public class SpawnOnTrigger : MonoBehaviour
 
     private void Update()
     {
-        if (playerInside && Input.GetKeyDown(spawnKey))
+        if (playerInside && Input.GetButtonDown(spawnButton))
         {
             Instantiate(prefab, spawnPoint.position, Quaternion.identity);
             Debug.Log("New Pizza baked!");
