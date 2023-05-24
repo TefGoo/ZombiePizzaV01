@@ -26,7 +26,7 @@ public class SpawnOnTrigger : MonoBehaviour
 
     private void Update()
     {
-        if (playerInside && Input.GetButtonDown(spawnButton))
+        if (playerInside && (Input.GetButtonDown(spawnButton) || Input.GetButtonDown("Spawn")))
         {
             Instantiate(prefab, spawnPoint.position, Quaternion.identity);
             Debug.Log("New Pizza baked!");

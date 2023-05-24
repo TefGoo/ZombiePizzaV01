@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5331269294225480136}
   - component: {fileID: 5331269294225480137}
   - component: {fileID: 5331269294225480142}
+  - component: {fileID: 8759878297041889192}
   m_Layer: 0
   m_Name: PizzaBox
   m_TagString: Untagged
@@ -143,3 +144,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8759878297041889192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5331269294225480182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce01485664ce69649b60bc63265c597f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pointValue: 10
+  scoreText: {fileID: 0}
