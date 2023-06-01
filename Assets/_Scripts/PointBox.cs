@@ -16,8 +16,17 @@ public class PointBox : MonoBehaviour
             // Display the updated score in the TMP Text component
             scoreText.text = "$ " + ScoreManager.Instance.Score;
 
+            // Deactivate the pizza request object of the NPC
+            GameObject houseObject = other.gameObject;
+            NpcPizzaRequestObject pizzaRequestComponent = houseObject.GetComponentInChildren<NpcPizzaRequestObject>();
+            if (pizzaRequestComponent != null)
+            {
+                pizzaRequestComponent.DeactivatePizzaRequest();
+            }
+
             // Destroy the box object
             Destroy(gameObject);
         }
     }
+
 }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Pizza
   - House
+  - NPC
   layers:
   - Default
   - TransparentFX
