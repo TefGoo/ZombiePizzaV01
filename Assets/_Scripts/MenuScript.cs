@@ -5,7 +5,6 @@ public class MenuScript : MonoBehaviour
 {
     public void ChangeScene()
     {
-        // Replace "SceneName" with the name of the scene you want to load
         SceneManager.LoadScene("SampleScene");
     }
 

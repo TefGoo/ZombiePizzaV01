@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 6f;
+    [SerializeField] private float walkSpeed = 6f;
+    [SerializeField] private float runSpeed = 10f;
+    [SerializeField] private float crouchSpeed = 3f;
+
+    private float currentSpeed;
     private bool isWalking;
     private bool isRunning;
     private bool isAttacking;
@@ -33,7 +37,21 @@ public class Player : MonoBehaviour
 
         Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
 
-        transform.position += moveDir * moveSpeed * Time.deltaTime;
+        // Apply speed based on movement state
+        if (isRunning)
+        {
+            currentSpeed = runSpeed;
+        }
+        else if (isCrouching)
+        {
+            currentSpeed = crouchSpeed;
+        }
+        else
+        {
+            currentSpeed = walkSpeed;
+        }
+
+        transform.position += moveDir * currentSpeed * Time.deltaTime;
 
         isWalking = moveDir != Vector3.zero;
 
