@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class NpcPizzaRequest : MonoBehaviour
@@ -8,6 +9,10 @@ public class NpcPizzaRequest : MonoBehaviour
     private float minRequestTime = 30f;  // Minimum time between requests (in seconds)
     private float maxRequestTime = 60f;  // Maximum time between requests (in seconds)
     private float nextRequestTime;  // Time when the next request will occur
+    public TextMeshProUGUI requestText;
+    public string noOrdersText = "No pending orders";
+
+
 
     private void Start()
     {
@@ -17,6 +22,37 @@ public class NpcPizzaRequest : MonoBehaviour
 
     private void Update()
     {
+        // Check if there are any active pizza requests
+        bool hasActiveRequests = false;
+        foreach (GameObject npc in npcObjects)
+        {
+            NpcPizzaRequestObject pizzaRequestComponent = npc.GetComponent<NpcPizzaRequestObject>();
+            if (pizzaRequestComponent != null && pizzaRequestComponent.gameObject.activeSelf)
+            {
+                hasActiveRequests = true;
+                break;
+            }
+        }
+
+        // If there are no active requests, display "No pending orders" on the canvas
+        if (!hasActiveRequests)
+        {
+            NpcPizzaRequestObject pizzaRequestComponent = pizzaRequestObject.GetComponent<NpcPizzaRequestObject>();
+            if (pizzaRequestComponent != null)
+            {
+                pizzaRequestComponent.ActivatePizzaRequest(noOrdersText);
+            }
+        }
+        else
+        {
+            // If there are active requests, deactivate the pizza request object for the NPC
+            NpcPizzaRequestObject pizzaRequestComponent = pizzaRequestObject.GetComponent<NpcPizzaRequestObject>();
+            if (pizzaRequestComponent != null)
+            {
+                pizzaRequestComponent.DeactivatePizzaRequest();
+            }
+        }
+
         // Check if it's time for the next request
         if (Time.time >= nextRequestTime)
         {
@@ -33,6 +69,8 @@ public class NpcPizzaRequest : MonoBehaviour
             nextRequestTime = Time.time + Random.Range(minRequestTime, maxRequestTime);
         }
     }
+
+
 
     private GameObject GetRandomNpc()
     {
@@ -51,8 +89,11 @@ public class NpcPizzaRequest : MonoBehaviour
         NpcPizzaRequestObject pizzaRequestComponent = npc.GetComponent<NpcPizzaRequestObject>();
         if (pizzaRequestComponent != null)
         {
-            pizzaRequestComponent.ActivatePizzaRequest();
+            // Pass the NPC information to the ActivatePizzaRequest method
+            string npcInfo = npc.name; // Change this line to get the NPC information you want to display
+            pizzaRequestComponent.ActivatePizzaRequest(npcInfo);
         }
     }
+
 
 }

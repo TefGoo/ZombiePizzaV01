@@ -1,26 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAnimator : MonoBehaviour
 {
     private const string IS_WALKING = "IsWalking";
     private const string IS_RUNNING = "IsRunning";
-    private const string IS_CROUCHING = "IsCrouching";
     private const string IS_ATTACKING = "IsAttacking";
-    [SerializeField] private Player player;
-    private Animator animator;
+    private const string IS_CROUCHING = "IsCrouching";
+
+    private Player player;
+    private Animator[] animators;
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
+        player = GetComponentInParent<Player>();
+        animators = GetComponentsInChildren<Animator>();
     }
 
     private void Update()
     {
-        animator.SetBool(IS_WALKING, player.IsWalking());
-        animator.SetBool(IS_RUNNING, player.IsRunning());
-        animator.SetBool(IS_CROUCHING, player.IsCrouching());
-        animator.SetBool(IS_ATTACKING, player.IsAttacking());
+        bool isWalking = player.IsWalking();
+        bool isRunning = player.IsRunning();
+        bool isAttacking = player.IsAttacking();
+        bool isCrouching = player.IsCrouching();
+
+        foreach (Animator animator in animators)
+        {
+            animator.SetBool(IS_WALKING, isWalking);
+            animator.SetBool(IS_RUNNING, isRunning);
+            animator.SetBool(IS_ATTACKING, isAttacking);
+            animator.SetBool(IS_CROUCHING, isCrouching);
+        }
     }
 }
