@@ -16,9 +16,20 @@ public class NpcPizzaRequest : MonoBehaviour
 
     private void Start()
     {
+        // Deactivate all house objects initially
+        foreach (GameObject npcObject in npcObjects)
+        {
+            NpcPizzaRequestObject pizzaRequestComponent = npcObject.GetComponent<NpcPizzaRequestObject>();
+            if (pizzaRequestComponent != null)
+            {
+                pizzaRequestComponent.DeactivatePizzaRequest();
+            }
+        }
+
         // Set the initial request time
         nextRequestTime = Time.time + Random.Range(minRequestTime, maxRequestTime);
     }
+
 
     private void Update()
     {
@@ -85,13 +96,11 @@ public class NpcPizzaRequest : MonoBehaviour
 
     private void DeliverPizza(GameObject npc)
     {
-        // Activate the pizza request object for the NPC
         NpcPizzaRequestObject pizzaRequestComponent = npc.GetComponent<NpcPizzaRequestObject>();
         if (pizzaRequestComponent != null)
         {
-            // Pass the NPC information to the ActivatePizzaRequest method
-            string npcInfo = npc.name; // Change this line to get the NPC information you want to display
-            pizzaRequestComponent.ActivatePizzaRequest(npcInfo);
+            pizzaRequestComponent.ActivatePizzaRequest(npc.name);
+            pizzaRequestComponent.houseObject = npc; // Pass the house GameObject reference
         }
     }
 

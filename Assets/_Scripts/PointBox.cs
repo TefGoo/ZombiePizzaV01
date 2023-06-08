@@ -22,11 +22,13 @@ public class PointBox : MonoBehaviour
             if (pizzaRequestComponent != null)
             {
                 pizzaRequestComponent.DeactivatePizzaRequest();
+                pizzaRequestComponent.DeactivateHouse(); // Deactivate the house GameObject
             }
 
             // Destroy the box object
             Destroy(gameObject);
         }
     }
+
 
 }
