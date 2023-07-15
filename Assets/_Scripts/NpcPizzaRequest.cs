@@ -5,63 +5,46 @@ public class NpcPizzaRequest : MonoBehaviour
 {
     public GameObject[] npcObjects;  // Array of NPC GameObjects
     public GameObject pizzaRequestObject; // The object to activate when an NPC requests a pizza
+    public TextMeshProUGUI requestText;
+    public string noOrdersText = "No pending orders";
 
     private float minRequestTime = 30f;  // Minimum time between requests (in seconds)
     private float maxRequestTime = 60f;  // Maximum time between requests (in seconds)
     private float nextRequestTime;  // Time when the next request will occur
-    public TextMeshProUGUI requestText;
-    public string noOrdersText = "No pending orders";
-
-
 
     private void Start()
     {
         // Deactivate all house objects initially
         foreach (GameObject npcObject in npcObjects)
         {
-            NpcPizzaRequestObject pizzaRequestComponent = npcObject.GetComponent<NpcPizzaRequestObject>();
-            if (pizzaRequestComponent != null)
-            {
-                pizzaRequestComponent.DeactivatePizzaRequest();
-            }
+            DeactivatePizzaRequest(npcObject);
         }
 
         // Set the initial request time
-        nextRequestTime = Time.time + Random.Range(minRequestTime, maxRequestTime);
+        SetNextRequestTime();
     }
-
 
     private void Update()
     {
         // Check if there are any active pizza requests
         bool hasActiveRequests = false;
-        foreach (GameObject npc in npcObjects)
+        foreach (GameObject npcObject in npcObjects)
         {
-            NpcPizzaRequestObject pizzaRequestComponent = npc.GetComponent<NpcPizzaRequestObject>();
-            if (pizzaRequestComponent != null && pizzaRequestComponent.gameObject.activeSelf)
+            if (IsPizzaRequestActive(npcObject))
             {
                 hasActiveRequests = true;
                 break;
             }
         }
 
-        // If there are no active requests, display "No pending orders" on the canvas
+        // Activate or deactivate the pizza request object based on active requests
         if (!hasActiveRequests)
         {
-            NpcPizzaRequestObject pizzaRequestComponent = pizzaRequestObject.GetComponent<NpcPizzaRequestObject>();
-            if (pizzaRequestComponent != null)
-            {
-                pizzaRequestComponent.ActivatePizzaRequest(noOrdersText);
-            }
+            ActivatePizzaRequest(pizzaRequestObject, noOrdersText);
         }
         else
         {
-            // If there are active requests, deactivate the pizza request object for the NPC
-            NpcPizzaRequestObject pizzaRequestComponent = pizzaRequestObject.GetComponent<NpcPizzaRequestObject>();
-            if (pizzaRequestComponent != null)
-            {
-                pizzaRequestComponent.DeactivatePizzaRequest();
-            }
+            DeactivatePizzaRequest(pizzaRequestObject);
         }
 
         // Check if it's time for the next request
@@ -77,11 +60,9 @@ public class NpcPizzaRequest : MonoBehaviour
             }
 
             // Calculate the time for the next request
-            nextRequestTime = Time.time + Random.Range(minRequestTime, maxRequestTime);
+            SetNextRequestTime();
         }
     }
-
-
 
     private GameObject GetRandomNpc()
     {
@@ -96,13 +77,35 @@ public class NpcPizzaRequest : MonoBehaviour
 
     private void DeliverPizza(GameObject npc)
     {
-        NpcPizzaRequestObject pizzaRequestComponent = npc.GetComponent<NpcPizzaRequestObject>();
+        ActivatePizzaRequest(npc, npc.name);
+    }
+
+    private void ActivatePizzaRequest(GameObject npcObject, string npcName)
+    {
+        NpcPizzaRequestObject pizzaRequestComponent = npcObject.GetComponent<NpcPizzaRequestObject>();
         if (pizzaRequestComponent != null)
         {
-            pizzaRequestComponent.ActivatePizzaRequest(npc.name);
-            pizzaRequestComponent.houseObject = npc; // Pass the house GameObject reference
+            pizzaRequestComponent.ActivatePizzaRequest(npcName);
         }
     }
 
+    private void DeactivatePizzaRequest(GameObject npcObject)
+    {
+        NpcPizzaRequestObject pizzaRequestComponent = npcObject.GetComponent<NpcPizzaRequestObject>();
+        if (pizzaRequestComponent != null)
+        {
+            pizzaRequestComponent.DeactivatePizzaRequest();
+        }
+    }
 
+    private bool IsPizzaRequestActive(GameObject npcObject)
+    {
+        NpcPizzaRequestObject pizzaRequestComponent = npcObject.GetComponent<NpcPizzaRequestObject>();
+        return pizzaRequestComponent != null && pizzaRequestComponent.IsActive();
+    }
+
+    private void SetNextRequestTime()
+    {
+        nextRequestTime = Time.time + Random.Range(minRequestTime, maxRequestTime);
+    }
 }

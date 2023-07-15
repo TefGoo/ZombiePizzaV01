@@ -8,6 +8,8 @@ TagManager:
   - House
   - NPC
   - RDHit
+  - Floor
+  - Zombie
   layers:
   - Default
   - TransparentFX
@@ -17,9 +19,9 @@ TagManager:
   - UI
   - Minimap
   - Minimap Icons
-  - 
-  - 
-  - 
+  - RDHit
+  - Player
+  - StoreDamage
   - 
   - 
   - 

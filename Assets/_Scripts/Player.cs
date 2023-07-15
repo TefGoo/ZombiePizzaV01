@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -14,6 +12,7 @@ public class Player : MonoBehaviour
     private bool isAttacking;
     private bool isCrouching;
     private bool crouchButtonPressed;
+    private bool hasBox;
 
     private Animator animator; // Reference to the Animator component
 
@@ -24,7 +23,7 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     private void Update()
@@ -110,8 +109,11 @@ public class Player : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) || Input.GetButtonDown("ControllerAttack"))
         {
-            isAttacking = true;
-            Debug.Log("Attack animation started");
+            if (!hasBox) // Only allow attacking if not holding a box
+            {
+                isAttacking = true;
+                Debug.Log("Attack animation started");
+            }
         }
         if (Input.GetMouseButtonUp(0) || Input.GetButtonUp("ControllerAttack"))
         {
@@ -119,18 +121,16 @@ public class Player : MonoBehaviour
             Debug.Log("Attack animation stopped");
         }
 
-        if (animator != null)
-        {
-            UpdateAnimator();
-        }
+        UpdateAnimator();
     }
 
     private void UpdateAnimator()
     {
         animator.SetBool(IS_WALKING, isWalking);
         animator.SetBool(IS_RUNNING, isRunning && !isCrouching);
-        animator.SetBool(IS_ATTACKING, isAttacking);
+        animator.SetBool(IS_ATTACKING, isAttacking && !hasBox);
         animator.SetBool(IS_CROUCHING, isCrouching);
+        animator.SetBool("HasBox", hasBox);
     }
 
     public bool IsWalking()
@@ -145,11 +145,16 @@ public class Player : MonoBehaviour
 
     public bool IsAttacking()
     {
-        return isAttacking;
+        return isAttacking && !hasBox;
     }
 
     public bool IsCrouching()
     {
         return isCrouching;
+    }
+
+    public void SetHasBox(bool value)
+    {
+        hasBox = value;
     }
 }

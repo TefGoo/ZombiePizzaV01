@@ -4,7 +4,7 @@ public class PizzaPickup : MonoBehaviour
 {
     public GameObject pizza;
     public Transform pizzaParent;
-
+    public Player player;
     private bool isEquipped = false;
 
     void Start()
@@ -40,6 +40,7 @@ public class PizzaPickup : MonoBehaviour
         pizza.GetComponent<Rigidbody>().isKinematic = false;
         pizza.GetComponent<BoxCollider>().enabled = true;
         isEquipped = false;
+        player.SetHasBox(false);
     }
 
     void Equip()
@@ -50,5 +51,6 @@ public class PizzaPickup : MonoBehaviour
         pizza.GetComponent<Rigidbody>().isKinematic = true;
         pizza.GetComponent<BoxCollider>().enabled = false;
         isEquipped = true;
+        player.SetHasBox(true);
     }
 }

@@ -1,12 +1,12 @@
 using UnityEngine;
-using System.Collections;
+using UnityEngine.AI;
 
 public class ZombieAI : MonoBehaviour
 {
     public Animator animator;
     public Transform player;
-    public float idleTime = 2f;
-    public float followDistance = 5f;
+    public Transform destination; // Destination for tower defense behavior
+    public float towerDefenseDistance = 10f; // Distance at which the zombie switches to tower defense behavior
     public float attackDistance = 1.5f;
     public float followSpeed = 2f;
     public float attackDelay = 0.3f; // Delay before dealing damage
@@ -14,6 +14,7 @@ public class ZombieAI : MonoBehaviour
     private enum ZombieState
     {
         Idle,
+        TowerDefense,
         FollowPlayer,
         Attack
     }
@@ -22,10 +23,13 @@ public class ZombieAI : MonoBehaviour
     private float currentIdleTime;
     private bool isAttacking;
 
+    private NavMeshAgent agent;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
-        currentIdleTime = idleTime;
+        currentIdleTime = Random.Range(1f, 3f);
+        agent = GetComponentInParent<NavMeshAgent>(); // Find NavMeshAgent in parent object
     }
 
     private void Update()
@@ -34,6 +38,9 @@ public class ZombieAI : MonoBehaviour
         {
             case ZombieState.Idle:
                 IdleState();
+                break;
+            case ZombieState.TowerDefense:
+                TowerDefenseState();
                 break;
             case ZombieState.FollowPlayer:
                 FollowPlayerState();
@@ -50,9 +57,31 @@ public class ZombieAI : MonoBehaviour
 
         if (currentIdleTime <= 0f)
         {
-            currentState = ZombieState.FollowPlayer;
+            currentState = ZombieState.TowerDefense;
             animator.SetBool("IsIdle", false);
-            animator.SetBool("IsFollowingPlayer", true);
+            animator.SetBool("IsTowerDefense", true);
+            agent.SetDestination(destination.position);
+        }
+    }
+
+    private void TowerDefenseState()
+    {
+        if (player != null && Vector3.Distance(transform.position, player.position) <= towerDefenseDistance)
+        {
+            SwitchToAI();
+        }
+        else if (!agent.hasPath || agent.remainingDistance <= agent.stoppingDistance)
+        {
+            currentState = ZombieState.Idle;
+            animator.SetBool("IsTowerDefense", false);
+            animator.SetBool("IsIdle", true);
+            currentIdleTime = Random.Range(1f, 3f);
+        }
+        else
+        {
+            currentState = ZombieState.TowerDefense;
+            animator.SetBool("IsTowerDefense", true);
+            animator.SetBool("IsIdle", false);
         }
     }
 
@@ -63,7 +92,8 @@ public class ZombieAI : MonoBehaviour
             currentState = ZombieState.Idle;
             animator.SetBool("IsFollowingPlayer", false);
             animator.SetBool("IsIdle", true);
-            currentIdleTime = idleTime;
+            currentIdleTime = Random.Range(1f, 3f);
+            agent.ResetPath();
             return;
         }
 
@@ -75,17 +105,17 @@ public class ZombieAI : MonoBehaviour
             animator.SetBool("IsFollowingPlayer", false);
             animator.SetBool("IsAttacking", true);
         }
-        else if (distanceToPlayer > followDistance)
+        else if (distanceToPlayer > towerDefenseDistance)
         {
             currentState = ZombieState.Idle;
             animator.SetBool("IsFollowingPlayer", false);
             animator.SetBool("IsIdle", true);
-            currentIdleTime = idleTime;
+            currentIdleTime = Random.Range(1f, 3f);
+            agent.ResetPath();
         }
         else
         {
-            transform.LookAt(player);
-            transform.Translate(Vector3.forward * followSpeed * Time.deltaTime);
+            agent.SetDestination(player.position); // Set destination to player position
         }
     }
 
@@ -96,7 +126,8 @@ public class ZombieAI : MonoBehaviour
             currentState = ZombieState.Idle;
             animator.SetBool("IsAttacking", false);
             animator.SetBool("IsIdle", true);
-            currentIdleTime = idleTime;
+            currentIdleTime = Random.Range(1f, 3f);
+            agent.ResetPath();
             return;
         }
 
@@ -121,7 +152,7 @@ public class ZombieAI : MonoBehaviour
         }
     }
 
-    private IEnumerator DelayedDamagePlayer()
+    private System.Collections.IEnumerator DelayedDamagePlayer()
     {
         yield return new WaitForSeconds(attackDelay);
 
@@ -135,24 +166,11 @@ public class ZombieAI : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void SwitchToAI()
     {
-        if (other.CompareTag("Player"))
-        {
-            player = other.transform;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            player = null;
-            currentState = ZombieState.Idle;
-            animator.SetBool("IsFollowingPlayer", false);
-            animator.SetBool("IsAttacking", false);
-            animator.SetBool("IsIdle", true);
-            currentIdleTime = idleTime;
-        }
+        currentState = ZombieState.FollowPlayer;
+        animator.SetBool("IsTowerDefense", false);
+        animator.SetBool("IsFollowingPlayer", true);
+        agent.ResetPath();
     }
 }
