@@ -6,14 +6,13 @@ public class EnemySpawner : MonoBehaviour
     public Transform[] spawnPoints; // Array of spawn points for the enemies
     public Transform destination; // Destination for the enemies to walk towards
 
-    public float minSpawnInterval = 10f; // Minimum spawn interval
-    public float maxSpawnInterval = 15f; // Maximum spawn interval
+    public float spawnInterval = 10f; // Spawn interval
 
     private float nextSpawnTime; // Time when the next enemy should spawn
 
     private void Start()
     {
-        SetNextSpawnTime();
+        nextSpawnTime = Time.time + spawnInterval; // Set the initial spawn time
     }
 
     private void Update()
@@ -21,12 +20,24 @@ public class EnemySpawner : MonoBehaviour
         if (Time.time >= nextSpawnTime)
         {
             SpawnEnemy();
-            SetNextSpawnTime();
+            nextSpawnTime = Time.time + spawnInterval; // Update the next spawn time
         }
     }
 
     private void SpawnEnemy()
     {
+        if (enemyPrefab == null)
+        {
+            Debug.LogWarning("Enemy prefab is not assigned.");
+            return;
+        }
+
+        if (spawnPoints.Length == 0)
+        {
+            Debug.LogWarning("No spawn points assigned for enemies.");
+            return;
+        }
+
         Transform spawnPoint = GetRandomSpawnPoint();
         GameObject enemy = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
 
@@ -47,11 +58,5 @@ public class EnemySpawner : MonoBehaviour
     {
         int index = Random.Range(0, spawnPoints.Length);
         return spawnPoints[index];
-    }
-
-    private void SetNextSpawnTime()
-    {
-        float randomInterval = Random.Range(minSpawnInterval, maxSpawnInterval);
-        nextSpawnTime = Time.time + randomInterval;
     }
 }

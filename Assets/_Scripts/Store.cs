@@ -1,15 +1,17 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class Store : MonoBehaviour
 {
-    public int maxHealth = 10;
-    public float damageCheckInterval = 3f;
+    public int maxHealth = 20;
+    public float damageCheckInterval = 1f; // Reduce the interval for more responsive damage
     public TextMeshProUGUI healthText;
 
     private int currentHealth;
     private float nextDamageCheckTime;
-    private int zombiesTouching;
+    private bool isBeingAttacked; // Flag to check if the store is being attacked
+    private int zombiesTouching; // Add this line to fix the error
 
     private void Start()
     {
@@ -22,32 +24,14 @@ public class Store : MonoBehaviour
     {
         if (Time.time >= nextDamageCheckTime)
         {
-            DealDamage(zombiesTouching);
+            if (isBeingAttacked)
+            {
+                DealDamage(zombiesTouching); // Deal damage based on the number of zombies touching
+            }
             nextDamageCheckTime = Time.time + damageCheckInterval;
         }
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Zombie"))
-        {
-            zombiesTouching++;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Zombie"))
-        {
-            zombiesTouching--;
-            if (zombiesTouching < 0)
-            {
-                zombiesTouching = 0;
-            }
-        }
-    }
-
-    public void Heal(int amount)
+    public void Heal(int amount) // Rename 'DealDamage' to 'Heal'
     {
         currentHealth += amount;
         if (currentHealth > maxHealth)
@@ -56,6 +40,28 @@ public class Store : MonoBehaviour
         }
 
         UpdateHealthText();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Zombie"))
+        {
+            zombiesTouching++;
+            isBeingAttacked = true; // A zombie has entered the trigger, the store is being attacked
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Zombie"))
+        {
+            zombiesTouching--;
+            if (zombiesTouching <= 0)
+            {
+                zombiesTouching = 0;
+                isBeingAttacked = false; // No zombies are touching, the store is not being attacked
+            }
+        }
     }
 
     private void DealDamage(int amount)
@@ -74,7 +80,9 @@ public class Store : MonoBehaviour
     {
         // Perform any actions or effects when the store is destroyed
         Debug.Log("Store has been destroyed!");
-        Destroy(gameObject);
+
+        // Load a new scene, you can replace "YourSceneName" with the actual name of your scene
+        SceneManager.LoadScene("StoreDestroyed");
     }
 
     public int GetCurrentHealth()

@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     private bool isCrouching;
     private bool crouchButtonPressed;
     private bool hasBox;
+    private float originalWalkSpeed;
 
     private Animator animator; // Reference to the Animator component
 
@@ -112,12 +113,15 @@ public class Player : MonoBehaviour
             if (!hasBox) // Only allow attacking if not holding a box
             {
                 isAttacking = true;
+                originalWalkSpeed = currentSpeed; // Store the original walk speed before attacking
+                currentSpeed = currentSpeed / 2f; // Reduce speed in half while attacking
                 Debug.Log("Attack animation started");
             }
         }
         if (Input.GetMouseButtonUp(0) || Input.GetButtonUp("ControllerAttack"))
         {
             isAttacking = false;
+            currentSpeed = isCrouching ? crouchSpeed : originalWalkSpeed; // Restore original walk speed after attacking
             Debug.Log("Attack animation stopped");
         }
 

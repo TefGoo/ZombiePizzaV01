@@ -12,6 +12,8 @@ public class NpcPizzaRequest : MonoBehaviour
     private float maxRequestTime = 60f;  // Maximum time between requests (in seconds)
     private float nextRequestTime;  // Time when the next request will occur
 
+    private NpcPizzaRequestObject currentPizzaRequest;
+
     private void Start()
     {
         // Deactivate all house objects initially
@@ -26,27 +28,6 @@ public class NpcPizzaRequest : MonoBehaviour
 
     private void Update()
     {
-        // Check if there are any active pizza requests
-        bool hasActiveRequests = false;
-        foreach (GameObject npcObject in npcObjects)
-        {
-            if (IsPizzaRequestActive(npcObject))
-            {
-                hasActiveRequests = true;
-                break;
-            }
-        }
-
-        // Activate or deactivate the pizza request object based on active requests
-        if (!hasActiveRequests)
-        {
-            ActivatePizzaRequest(pizzaRequestObject, noOrdersText);
-        }
-        else
-        {
-            DeactivatePizzaRequest(pizzaRequestObject);
-        }
-
         // Check if it's time for the next request
         if (Time.time >= nextRequestTime)
         {
@@ -56,12 +37,48 @@ public class NpcPizzaRequest : MonoBehaviour
             if (randomNpc != null)
             {
                 // Call the method to handle the pizza request for the selected NPC
-                DeliverPizza(randomNpc);
+                currentPizzaRequest = randomNpc.GetComponent<NpcPizzaRequestObject>();
+                if (currentPizzaRequest != null)
+                {
+                    DeliverPizza(randomNpc);
+                    SetTimer();
+                }
             }
 
             // Calculate the time for the next request
             SetNextRequestTime();
         }
+
+        // Check for the timer
+        if (currentPizzaRequest != null)
+        {
+            if (currentPizzaRequest.IsActive() && Time.time >= currentPizzaRequest.TimerEndTime)
+            {
+                // The timer has ended, cancel the request and remove 5 score
+                CancelPizzaRequest();
+                ScoreManager.Instance.AddPoints(-5); // Remove 5 score
+            }
+        }
+
+        // Activate or deactivate the pizza request object based on active requests
+        if (currentPizzaRequest == null || !currentPizzaRequest.IsActive())
+        {
+            ActivatePizzaRequest(pizzaRequestObject, noOrdersText);
+        }
+        else
+        {
+            DeactivatePizzaRequest(pizzaRequestObject);
+        }
+    }
+
+    private void SetNextRequestTime()
+    {
+        nextRequestTime = Time.time + Random.Range(minRequestTime, maxRequestTime);
+    }
+
+    private void SetTimer()
+    {
+        currentPizzaRequest.StartTimer();
     }
 
     private GameObject GetRandomNpc()
@@ -98,14 +115,12 @@ public class NpcPizzaRequest : MonoBehaviour
         }
     }
 
-    private bool IsPizzaRequestActive(GameObject npcObject)
+    private void CancelPizzaRequest()
     {
-        NpcPizzaRequestObject pizzaRequestComponent = npcObject.GetComponent<NpcPizzaRequestObject>();
-        return pizzaRequestComponent != null && pizzaRequestComponent.IsActive();
-    }
-
-    private void SetNextRequestTime()
-    {
-        nextRequestTime = Time.time + Random.Range(minRequestTime, maxRequestTime);
+        if (currentPizzaRequest != null)
+        {
+            currentPizzaRequest.CancelRequest();
+            currentPizzaRequest = null;
+        }
     }
 }

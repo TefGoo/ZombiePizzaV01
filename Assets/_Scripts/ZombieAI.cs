@@ -6,10 +6,15 @@ public class ZombieAI : MonoBehaviour
     public Animator animator;
     public Transform player;
     public Transform destination; // Destination for tower defense behavior
+    public Transform destination1; // First destination for tower defense behavior
+    public Transform destination2; // Second destination for tower defense behavior
     public float towerDefenseDistance = 10f; // Distance at which the zombie switches to tower defense behavior
     public float attackDistance = 1.5f;
     public float followSpeed = 2f;
     public float attackDelay = 0.3f; // Delay before dealing damage
+
+    public float towerDefenseSpeed = 2f; // Speed when in tower defense mode
+    public float followPlayerSpeed = 4f; // Speed when following the player
 
     private enum ZombieState
     {
@@ -60,7 +65,23 @@ public class ZombieAI : MonoBehaviour
             currentState = ZombieState.TowerDefense;
             animator.SetBool("IsIdle", false);
             animator.SetBool("IsTowerDefense", true);
-            agent.SetDestination(destination.position);
+            ChooseClosestDestination();
+        }
+    }
+
+    private void ChooseClosestDestination()
+    {
+        // Check which destination is closer and set it as the new destination
+        float distanceToDestination1 = Vector3.Distance(transform.position, destination1.position);
+        float distanceToDestination2 = Vector3.Distance(transform.position, destination2.position);
+
+        if (distanceToDestination1 < distanceToDestination2)
+        {
+            agent.SetDestination(destination1.position);
+        }
+        else
+        {
+            agent.SetDestination(destination2.position);
         }
     }
 
@@ -79,6 +100,8 @@ public class ZombieAI : MonoBehaviour
         }
         else
         {
+            // Set the speed to the towerDefenseSpeed when in tower defense mode
+            agent.speed = towerDefenseSpeed;
             currentState = ZombieState.TowerDefense;
             animator.SetBool("IsTowerDefense", true);
             animator.SetBool("IsIdle", false);
@@ -115,6 +138,8 @@ public class ZombieAI : MonoBehaviour
         }
         else
         {
+            // Set the speed to the followPlayerSpeed when following the player
+            agent.speed = followPlayerSpeed;
             agent.SetDestination(player.position); // Set destination to player position
         }
     }
