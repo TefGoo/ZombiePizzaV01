@@ -5,8 +5,7 @@ public class Store : MonoBehaviour
 {
     public int maxHealth = 10;
     public float damageCheckInterval = 3f;
-    public TextMeshProUGUI healthText; // Reference to the TMP Text component
-    public GameObject targetObject; // Object to destroy when the store's health reaches zero
+    public TextMeshProUGUI healthText;
 
     private int currentHealth;
     private float nextDamageCheckTime;
@@ -48,11 +47,21 @@ public class Store : MonoBehaviour
         }
     }
 
+    public void Heal(int amount)
+    {
+        currentHealth += amount;
+        if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+
+        UpdateHealthText();
+    }
+
     private void DealDamage(int amount)
     {
         currentHealth -= amount;
 
-        // Check if the store is destroyed
         if (currentHealth <= 0)
         {
             DestroyStore();
@@ -65,7 +74,12 @@ public class Store : MonoBehaviour
     {
         // Perform any actions or effects when the store is destroyed
         Debug.Log("Store has been destroyed!");
-        Destroy(targetObject);
+        Destroy(gameObject);
+    }
+
+    public int GetCurrentHealth()
+    {
+        return currentHealth;
     }
 
     private void UpdateHealthText()
