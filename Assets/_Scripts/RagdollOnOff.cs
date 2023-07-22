@@ -21,6 +21,7 @@ public class RagdollOnOff : MonoBehaviour
         {
             RagdollModeOn();
             DeactivateZombieAI(); // Deactivate ZombieAI script
+            StartCoroutine(DestroyZombieAfterDelay());
         }
     }
 
@@ -73,5 +74,14 @@ public class RagdollOnOff : MonoBehaviour
         {
             zombieAI.enabled = false; // Disable the ZombieAI script
         }
+    }
+
+    IEnumerator DestroyZombieAfterDelay()
+    {
+        // Wait for 3 seconds
+        yield return new WaitForSeconds(3f);
+
+        // Destroy the zombie object
+        Destroy(gameObject);
     }
 }

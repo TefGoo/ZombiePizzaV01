@@ -6,7 +6,7 @@ public class EnemySpawner : MonoBehaviour
     public Transform[] spawnPoints; // Array of spawn points for the enemies
     public Transform destination; // Destination for the enemies to walk towards
 
-    public float spawnInterval = 10f; // Spawn interval
+    public float spawnInterval = 12f; // Spawn interval
 
     private float nextSpawnTime; // Time when the next enemy should spawn
 
