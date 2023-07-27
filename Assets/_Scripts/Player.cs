@@ -161,4 +161,9 @@ public class Player : MonoBehaviour
     {
         hasBox = value;
     }
+
+    public bool HasBox()
+    {
+        return hasBox;
+    }
 }

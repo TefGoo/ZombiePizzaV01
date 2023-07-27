@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 5331269294225480137}
   - component: {fileID: 5331269294225480142}
   - component: {fileID: 8759878297041889192}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: PizzaBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,6 +102,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pizza: {fileID: 5331269294225480182}
   pizzaParent: {fileID: 0}
+  player: {fileID: 0}
+  messageText: {fileID: 0}
 --- !u!65 &5331269294225480136
 BoxCollider:
   m_ObjectHideFlags: 0
