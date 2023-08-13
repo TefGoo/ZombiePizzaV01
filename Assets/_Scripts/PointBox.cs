@@ -3,30 +3,44 @@ using TMPro;
 
 public class PointBox : MonoBehaviour
 {
-    public int pointValue = 10;   // The number of points to give to the player
-    public TextMeshProUGUI scoreText;   // Reference to the TMP Text component where the score will be displayed
+    public int correctFlavorPoints = 10;
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI feedbackText;
+
+    private string requestedFlavor; // Store the requested flavor
+
+    public void SetRequestedFlavor(string flavor)
+    {
+        requestedFlavor = flavor;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("House"))
         {
-            // Give points to the player
-            ScoreManager.Instance.AddPoints(pointValue);
-
-            // Display the updated score in the TMP Text component
-            scoreText.text = "$ " + ScoreManager.Instance.Score;
-
-            // Deactivate the pizza request object of the NPC
+            Debug.Log("Delivered Pizza Tag: " + gameObject.tag);
             GameObject houseObject = other.gameObject;
             NpcPizzaRequestObject pizzaRequestComponent = houseObject.GetComponentInChildren<NpcPizzaRequestObject>();
-            if (pizzaRequestComponent != null)
+            if (pizzaRequestComponent != null && pizzaRequestComponent.IsActive())
             {
-                pizzaRequestComponent.DeactivatePizzaRequest();
-                pizzaRequestComponent.DeactivateHouse(); // Deactivate the house GameObject
-            }
+                if (requestedFlavor == gameObject.tag)
+                {
+                    ScoreManager.Instance.AddPoints(correctFlavorPoints);
+                    feedbackText.text = "Correct flavor delivered!";
+                    pizzaRequestComponent.DeactivateHouse(); // Hide the house object
+                }
+                else
+                {
+                    feedbackText.text = "Wrong flavor delivered!";
+                }
 
-            // Destroy the box object
-            Destroy(gameObject);
+                feedbackText.gameObject.SetActive(true);
+                scoreText.text = "$ " + ScoreManager.Instance.Score;
+
+                pizzaRequestComponent.DeactivatePizzaRequest();
+
+                Destroy(gameObject);
+            }
         }
     }
 }

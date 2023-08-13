@@ -7,7 +7,7 @@ public class WeaponBuyer : MonoBehaviour
     public GameObject weaponPrefab;
     public int weaponCost = 50;
     public Transform spawnPoint;
-    public TMP_Text moneyText; // Reference to the UI Text element that displays the money
+    public TMP_Text moneyText;
 
     private ScoreManager scoreManager;
 
@@ -21,13 +21,11 @@ public class WeaponBuyer : MonoBehaviour
     {
         if (scoreManager.Score >= weaponCost)
         {
-            // Deduct the cost from the player's money
+           
             scoreManager.AddPoints(-weaponCost);
 
-            // Spawn the weapon at the spawn point position
             Instantiate(weaponPrefab, spawnPoint.position, spawnPoint.rotation);
 
-            // Update the money text after the purchase
             UpdateMoneyText();
 
             Debug.Log("Weapon bought and spawned!");

@@ -25,7 +25,6 @@ public class NpcPizzaRequestObject : MonoBehaviour
         houseObject.SetActive(false);
         isActive = false;
     }
-
     public void DeactivateHouse()
     {
         houseObject.SetActive(false);

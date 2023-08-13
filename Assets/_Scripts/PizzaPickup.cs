@@ -4,16 +4,22 @@ using System.Collections;
 
 public class PizzaPickup : MonoBehaviour
 {
+    public enum PickupType
+    {
+        Box,
+        Gun
+    }
+
+    public PickupType pickupType; // Specify the pickup type in the Inspector
     public GameObject pizza;
     public Transform pizzaParent;
     public Player player;
-    public TextMeshProUGUI messageText; // Reference to the TMP UI Text
+    public TextMeshProUGUI messageText;
     private bool isEquipped = false;
 
     void Start()
     {
         pizza.GetComponent<Rigidbody>().isKinematic = true;
-        // Hide the TMP UI Text at start
         messageText.gameObject.SetActive(false);
     }
 
@@ -32,16 +38,20 @@ public class PizzaPickup : MonoBehaviour
     {
         if (other.gameObject.tag == "Player" && !isEquipped)
         {
-            if (Input.GetKeyDown(KeyCode.E) || Input.GetButtonDown("ControllerEquip"))
+            if ((Input.GetKeyDown(KeyCode.E) || Input.GetButtonDown("ControllerEquip")) && !player.HasBox() && !player.HasGun())
             {
-                if (!player.HasBox())
+                if (pickupType == PickupType.Box)
                 {
-                    Equip();
+                    EquipBox();
                 }
-                else
+                else if (pickupType == PickupType.Gun)
                 {
-                    ShowMessage("You already have an item");
+                    EquipGun();
                 }
+            }
+            else if (player.HasBox() || player.HasGun())
+            {
+                ShowMessage("You already have an item");
             }
         }
     }
@@ -53,9 +63,10 @@ public class PizzaPickup : MonoBehaviour
         pizza.GetComponent<BoxCollider>().enabled = true;
         isEquipped = false;
         player.SetHasBox(false);
+        player.SetHasGun(false);
     }
 
-    void Equip()
+    void EquipBox()
     {
         pizza.transform.position = pizzaParent.position;
         pizza.transform.rotation = pizzaParent.rotation;
@@ -64,20 +75,34 @@ public class PizzaPickup : MonoBehaviour
         pizza.GetComponent<BoxCollider>().enabled = false;
         isEquipped = true;
         player.SetHasBox(true);
+        player.SetHasGun(false);
+    }
+
+    void EquipGun()
+    {
+        // Your gun equip logic here
+        // Similar to EquipBox but for the gun
+        pizza.transform.position = pizzaParent.position;
+        pizza.transform.rotation = pizzaParent.rotation;
+        pizza.transform.SetParent(pizzaParent);
+        pizza.GetComponent<Rigidbody>().isKinematic = true;
+        pizza.GetComponent<BoxCollider>().enabled = false;
+        isEquipped = true;
+        player.SetHasBox(false);
+        player.SetHasGun(true);
     }
 
     void ShowMessage(string text)
     {
         messageText.text = text;
-        messageText.gameObject.SetActive(true); // Show the TMP UI Text
-        // Start a coroutine to hide the message after a short delay
+        messageText.gameObject.SetActive(true);
         StartCoroutine(HideMessage());
     }
 
     IEnumerator HideMessage()
     {
         yield return new WaitForSeconds(3f);
-        messageText.text = ""; // Clear the text
-        messageText.gameObject.SetActive(false); // Hide the TMP UI Text
+        messageText.text = "";
+        messageText.gameObject.SetActive(false);
     }
 }

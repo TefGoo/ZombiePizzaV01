@@ -10,6 +10,11 @@ TagManager:
   - RDHit
   - Floor
   - Zombie
+  - Pepperoni
+  - Hawaiian
+  - Supreme
+  - Mergherita
+  - Vegetarian
   layers:
   - Default
   - TransparentFX
@@ -24,7 +29,7 @@ TagManager:
   - StoreDamage
   - Pizza
   - Decor
-  - 
+  - Gun
   - 
   - 
   - 

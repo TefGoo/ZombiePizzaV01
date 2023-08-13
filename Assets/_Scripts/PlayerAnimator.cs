@@ -6,6 +6,8 @@ public class PlayerAnimator : MonoBehaviour
     private const string IS_RUNNING = "IsRunning";
     private const string IS_ATTACKING = "IsAttacking";
     private const string IS_CROUCHING = "IsCrouching";
+    private const string HAS_BOX = "HasBox";
+    private const string HAS_GUN = "HasGun"; // Add the constant for gun
 
     private Player player;
     private Animator[] animators;
@@ -22,6 +24,8 @@ public class PlayerAnimator : MonoBehaviour
         bool isRunning = player.IsRunning();
         bool isAttacking = player.IsAttacking();
         bool isCrouching = player.IsCrouching();
+        bool hasBox = player.HasBox();
+        bool hasGun = player.HasGun(); // Get gun status from Player script
 
         foreach (Animator animator in animators)
         {
@@ -29,6 +33,8 @@ public class PlayerAnimator : MonoBehaviour
             animator.SetBool(IS_RUNNING, isRunning);
             animator.SetBool(IS_ATTACKING, isAttacking);
             animator.SetBool(IS_CROUCHING, isCrouching);
+            animator.SetBool(HAS_BOX, hasBox);
+            animator.SetBool(HAS_GUN, hasGun); // Set gun status
         }
     }
 }

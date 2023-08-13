@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5256410575470889135}
   - component: {fileID: 2512167706718884183}
   - component: {fileID: 2239723774826013350}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: shotgun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49,9 +49,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca963dfe812f4274784b2e5ebe1956c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickupType: 1
   pizza: {fileID: 4380045030335593257}
   pizzaParent: {fileID: 0}
   player: {fileID: 0}
+  messageText: {fileID: 0}
 --- !u!65 &5256410575470889135
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -76,8 +78,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.015514679, y: 0.027080124, z: 0.090447396}
-  m_Center: {x: 0.00025470898, y: 0.00026168273, z: -0.00029499715}
+  m_Size: {x: 0.021054788, y: 0.027080124, z: 0.09044741}
+  m_Center: {x: 0.0001654969, y: 0.00026168273, z: -0.00029499715}
 --- !u!54 &2239723774826013350
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -105,7 +107,7 @@ GameObject:
   - component: {fileID: 4380045030335293197}
   - component: {fileID: 4380045030336620333}
   - component: {fileID: 4380045030337586669}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Mesh1_Group2_Group1_Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +193,7 @@ GameObject:
   - component: {fileID: 4380045030335293199}
   - component: {fileID: 4380045030336620335}
   - component: {fileID: 4380045030337586671}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Mesh2_Group3_Group1_Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
