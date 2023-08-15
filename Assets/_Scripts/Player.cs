@@ -112,14 +112,7 @@ public class Player : MonoBehaviour
             animator.SetBool(IS_CROUCHING, isCrouching);
         }
 
-        if ((Input.GetMouseButtonDown(0) || Input.GetButtonDown("ControllerAttack")) && hasGun)
-        {
-            isAttacking = true;
-            originalWalkSpeed = currentSpeed;
-            currentSpeed = currentSpeed / 2f;
-            Debug.Log("Attack animation started");
-        }
-        else if ((Input.GetMouseButtonDown(0) || Input.GetButtonDown("ControllerAttack")) && !hasBox && !hasGun)
+        if (Input.GetMouseButtonDown(0) || Input.GetButtonDown("ControllerAttack"))
         {
             isAttacking = true;
             originalWalkSpeed = currentSpeed;
@@ -199,7 +192,7 @@ public class Player : MonoBehaviour
 
     public bool IsAttacking()
     {
-        return isAttacking && !hasBox && !hasGun;
+        return isAttacking;
     }
 
     public bool IsCrouching()

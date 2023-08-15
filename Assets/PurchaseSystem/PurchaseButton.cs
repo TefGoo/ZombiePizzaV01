@@ -5,20 +5,24 @@ using UnityEngine.Events;
 
 public class PurchaseButton : MonoBehaviour
 {
-    public UnityEvent Purchase;
-    [SerializeField] private int _purchaseCost = 1;
+    public WeaponBuyer weaponBuyer;
+    public float activationDelay = 5.0f;
+    private bool canActivate = true;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player") && canActivate)
         {
-            //TODO optionally check if Player
-            // check if player has enough munny'
-            // get access to player's money
-            // check if playerMoney > _purchaseCost
-            // if so, subtract _purchase cost from player money
-            // and purchase!
-            Purchase?.Invoke();
+            weaponBuyer.BuyWeaponAndPerformActions();
+
+            canActivate = false;
+            StartCoroutine(ResetActivation());
         }
+    }
+
+    private IEnumerator ResetActivation()
+    {
+        yield return new WaitForSeconds(activationDelay);
+        canActivate = true;
     }
 }

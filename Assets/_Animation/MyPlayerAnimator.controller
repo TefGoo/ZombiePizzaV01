@@ -129,10 +129,13 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: IsAttacking
+    m_ConditionEvent: HasGun
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: HasGun
+    m_ConditionEvent: IsAttacking
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: IsWalking
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 7644489658728244097}
@@ -231,10 +234,13 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: IsAttacking
+    m_ConditionEvent: HasGun
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: HasGun
+    m_ConditionEvent: IsAttacking
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: IsWalking
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 7644489658728244097}
@@ -315,10 +321,13 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: IsAttacking
+    m_ConditionEvent: HasGun
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: HasGun
+    m_ConditionEvent: IsAttacking
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: IsWalking
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 7644489658728244097}
@@ -1179,7 +1188,7 @@ AnimatorStateMachine:
     m_Position: {x: 10, y: 120, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8559782941337759767}
-    m_Position: {x: 1270, y: 0, z: 0}
+    m_Position: {x: 1280, y: 0, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8754431207685759217}
     m_Position: {x: -150, y: 250, z: 0}
@@ -2181,7 +2190,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: 3f4d4ebe3ff68244ea38df05abf50263,
+  m_Motion: {fileID: -203655887218126122, guid: 47b72190f855d3045ab54f5512cc37f9,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
