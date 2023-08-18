@@ -1,12 +1,13 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class HealthStore : MonoBehaviour
 {
     public int healingPointsCost = 5;
     public int healingPointsValue = 1;
     public TextMeshProUGUI moneyText;
-    public TextMeshProUGUI healthText;
+    public Image healthBar; // Reference to the health bar's foreground image
 
     private ScoreManager scoreManager;
     private Store store;
@@ -16,7 +17,7 @@ public class HealthStore : MonoBehaviour
         scoreManager = ScoreManager.Instance;
         store = GetComponent<Store>();
         UpdateMoneyText();
-        UpdateHealthText();
+        UpdateHealthBar();
     }
 
     public void BuyHealingPoints()
@@ -30,7 +31,7 @@ public class HealthStore : MonoBehaviour
             if (store != null)
             {
                 store.Heal(healingPointsValue);
-                UpdateHealthText();
+                UpdateHealthBar();
             }
             else
             {
@@ -53,11 +54,12 @@ public class HealthStore : MonoBehaviour
         }
     }
 
-    private void UpdateHealthText()
+    private void UpdateHealthBar()
     {
-        if (healthText != null && store != null)
+        if (healthBar != null && store != null)
         {
-            healthText.text = "Health: " + store.GetCurrentHealth().ToString();
+            float fillAmount = (float)store.GetCurrentHealth() / store.maxHealth;
+            healthBar.fillAmount = fillAmount;
         }
     }
 }

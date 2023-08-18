@@ -1,45 +1,40 @@
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI; // Import the UI namespace
 using UnityEngine.SceneManagement;
 
 public class Store : MonoBehaviour
 {
     public int maxHealth = 20;
-    public float damageCheckInterval = 1f; // Reduce the interval for more responsive damage
-    public TextMeshProUGUI healthText;
+    public float damageCheckInterval = 1f;
+    public float damageCooldown = 2f;
+    public int damageAmount = 5;
+    public Image healthBarImage; // Reference to the health bar image UI element
 
     private int currentHealth;
     private float nextDamageCheckTime;
-    private bool isBeingAttacked; // Flag to check if the store is being attacked
-    private int zombiesTouching; // Add this line to fix the error
+    private float nextDamageTime;
+    private bool isBeingAttacked;
+    private int zombiesTouching;
 
     private void Start()
     {
         currentHealth = maxHealth;
         nextDamageCheckTime = Time.time + damageCheckInterval;
-        UpdateHealthText();
+        nextDamageTime = Time.time;
+        UpdateHealthBar(); // Call the method to update the health bar
     }
 
     private void Update()
     {
-        if (Time.time >= nextDamageCheckTime)
+        if (isBeingAttacked && Time.time >= nextDamageCheckTime)
         {
-            if (isBeingAttacked)
+            if (Time.time >= nextDamageTime)
             {
-                DealDamage(zombiesTouching); // Deal damage based on the number of zombies touching
+                DealDamage(damageAmount);
+                nextDamageTime = Time.time + damageCooldown;
             }
             nextDamageCheckTime = Time.time + damageCheckInterval;
         }
-    }
-    public void Heal(int amount) // Rename 'DealDamage' to 'Heal'
-    {
-        currentHealth += amount;
-        if (currentHealth > maxHealth)
-        {
-            currentHealth = maxHealth;
-        }
-
-        UpdateHealthText();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -47,7 +42,7 @@ public class Store : MonoBehaviour
         if (other.CompareTag("Zombie"))
         {
             zombiesTouching++;
-            isBeingAttacked = true; // A zombie has entered the trigger, the store is being attacked
+            isBeingAttacked = true;
         }
     }
 
@@ -59,7 +54,7 @@ public class Store : MonoBehaviour
             if (zombiesTouching <= 0)
             {
                 zombiesTouching = 0;
-                isBeingAttacked = false; // No zombies are touching, the store is not being attacked
+                isBeingAttacked = false;
             }
         }
     }
@@ -73,15 +68,12 @@ public class Store : MonoBehaviour
             DestroyStore();
         }
 
-        UpdateHealthText();
+        UpdateHealthBar(); // Call the method to update the health bar
     }
 
     private void DestroyStore()
     {
-        // Perform any actions or effects when the store is destroyed
         Debug.Log("Store has been destroyed!");
-
-        // Load a new scene, you can replace "YourSceneName" with the actual name of your scene
         SceneManager.LoadScene("StoreDestroyed");
     }
 
@@ -90,11 +82,23 @@ public class Store : MonoBehaviour
         return currentHealth;
     }
 
-    private void UpdateHealthText()
+    private void UpdateHealthBar()
     {
-        if (healthText != null)
+        if (healthBarImage != null)
         {
-            healthText.text = "Health: " + currentHealth.ToString();
+            float fillAmount = (float)currentHealth / maxHealth;
+            healthBarImage.fillAmount = fillAmount;
         }
+    }
+
+    public void Heal(int amount)
+    {
+        currentHealth += amount;
+        if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+
+        UpdateHealthBar(); // Call the method to update the health bar
     }
 }
