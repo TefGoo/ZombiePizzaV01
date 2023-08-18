@@ -8,7 +8,7 @@ public class NpcPizzaRequest : MonoBehaviour
     public GameObject timerUI;
     public TextMeshProUGUI requestText;
     public TextMeshProUGUI timerText;
-    public TextMeshProUGUI feedbackText; // New TMP text for feedback messages
+    public TextMeshProUGUI feedbackText;
 
     private float minRequestTime = 30f;
     private float maxRequestTime = 60f;
@@ -25,7 +25,7 @@ public class NpcPizzaRequest : MonoBehaviour
         }
 
         SetNextRequestTime();
-        feedbackText.gameObject.SetActive(false); // Hide the feedback text initially
+        feedbackText.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -39,7 +39,7 @@ public class NpcPizzaRequest : MonoBehaviour
                 currentPizzaRequest = randomNpc.GetComponent<NpcPizzaRequestObject>();
                 if (currentPizzaRequest != null)
                 {
-                    DeliverPizza(randomNpc);
+                    currentPizzaRequest.RequestPizza(randomNpc.name); // Request pizza flavor for the NPC
                     SetTimer();
                 }
             }
@@ -61,7 +61,8 @@ public class NpcPizzaRequest : MonoBehaviour
 
         if (currentPizzaRequest == null || !currentPizzaRequest.IsActive())
         {
-            ActivatePizzaRequest(pizzaRequestObject, "No pending orders");
+            ActivatePizzaRequest(pizzaRequestObject, "No pending orders", "");
+
             timerUI.SetActive(false);
         }
         else
@@ -92,24 +93,16 @@ public class NpcPizzaRequest : MonoBehaviour
         return null;
     }
 
-    private void DeliverPizza(GameObject npc)
-    {
-        int randomFlavorIndex = Random.Range(0, pizzaFlavors.Length);
-        string requestedFlavor = pizzaFlavors[randomFlavorIndex];
-        ActivatePizzaRequest(npc, requestedFlavor);
-
-        Debug.Log("Requested Flavor Tag: " + requestedFlavor);
-    }
-
-    private void ActivatePizzaRequest(GameObject npcObject, string flavor)
+    private void ActivatePizzaRequest(GameObject npcObject, string flavor, string npcName)
     {
         NpcPizzaRequestObject pizzaRequestComponent = npcObject.GetComponent<NpcPizzaRequestObject>();
         if (pizzaRequestComponent != null)
         {
-            pizzaRequestComponent.ActivatePizzaRequest(flavor);
-            requestText.text = "Order: " + flavor + " pizza for " + npcObject.name;
+            pizzaRequestComponent.ActivatePizzaRequest(flavor, npcName);
+            requestText.text = "Order: " + flavor + " pizza for " + npcName;
         }
     }
+
 
     private void DeactivatePizzaRequest(GameObject npcObject)
     {

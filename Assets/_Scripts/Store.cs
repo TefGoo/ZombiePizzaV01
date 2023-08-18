@@ -1,61 +1,26 @@
 using UnityEngine;
-using UnityEngine.UI; // Import the UI namespace
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class Store : MonoBehaviour
 {
     public int maxHealth = 20;
-    public float damageCheckInterval = 1f;
-    public float damageCooldown = 2f;
     public int damageAmount = 5;
-    public Image healthBarImage; // Reference to the health bar image UI element
+    public Image healthBarImage;
 
     private int currentHealth;
-    private float nextDamageCheckTime;
-    private float nextDamageTime;
-    private bool isBeingAttacked;
-    private int zombiesTouching;
 
     private void Start()
     {
         currentHealth = maxHealth;
-        nextDamageCheckTime = Time.time + damageCheckInterval;
-        nextDamageTime = Time.time;
-        UpdateHealthBar(); // Call the method to update the health bar
-    }
-
-    private void Update()
-    {
-        if (isBeingAttacked && Time.time >= nextDamageCheckTime)
-        {
-            if (Time.time >= nextDamageTime)
-            {
-                DealDamage(damageAmount);
-                nextDamageTime = Time.time + damageCooldown;
-            }
-            nextDamageCheckTime = Time.time + damageCheckInterval;
-        }
+        UpdateHealthBar();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Zombie"))
         {
-            zombiesTouching++;
-            isBeingAttacked = true;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Zombie"))
-        {
-            zombiesTouching--;
-            if (zombiesTouching <= 0)
-            {
-                zombiesTouching = 0;
-                isBeingAttacked = false;
-            }
+            DealDamage(damageAmount);
         }
     }
 
@@ -68,7 +33,7 @@ public class Store : MonoBehaviour
             DestroyStore();
         }
 
-        UpdateHealthBar(); // Call the method to update the health bar
+        UpdateHealthBar();
     }
 
     private void DestroyStore()
@@ -99,6 +64,6 @@ public class Store : MonoBehaviour
             currentHealth = maxHealth;
         }
 
-        UpdateHealthBar(); // Call the method to update the health bar
+        UpdateHealthBar();
     }
 }

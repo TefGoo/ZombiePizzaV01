@@ -79,7 +79,7 @@ public class WeaponBuyer : MonoBehaviour
     {
         if (moneyText != null)
         {
-            moneyText.text = "Money: $" + scoreManager.Score.ToString();
+            moneyText.text = "$" + scoreManager.Score.ToString();
         }
     }
 }
