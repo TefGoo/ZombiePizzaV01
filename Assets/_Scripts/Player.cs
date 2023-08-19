@@ -25,6 +25,11 @@ public class Player : MonoBehaviour
 
     private bool isUIButtonPressed = false;
     private GameObject objectToShowHide;
+    public GameObject objectToHide; // Reference to the GameObject you want to hide/show
+
+    private GameObject objectToShowOnAttack;
+    private float activationTime;
+    private bool isObjectActivated;
 
     private void Awake()
     {
@@ -35,6 +40,13 @@ public class Player : MonoBehaviour
         if (objectToShowHide != null)
         {
             objectToShowHide.SetActive(false);
+        }
+
+        objectToShowOnAttack = GameObject.Find("AttackCollider");
+
+        if (objectToShowOnAttack != null)
+        {
+            objectToShowOnAttack.SetActive(false);
         }
     }
 
@@ -116,6 +128,12 @@ public class Player : MonoBehaviour
         {
             isAttacking = true;
             originalWalkSpeed = currentSpeed;
+
+            // Activate the object to show on attack
+            objectToShowOnAttack.SetActive(true);
+            activationTime = Time.time;
+            isObjectActivated = true;
+
             currentSpeed = currentSpeed / 2f;
             Debug.Log("Attack animation started");
         }
@@ -135,6 +153,13 @@ public class Player : MonoBehaviour
         {
             UpdateAnimator();
         }
+
+        // Check if the object has been active for 2 seconds and deactivate it
+        if (isObjectActivated && Time.time - activationTime >= 2f)
+        {
+            objectToShowOnAttack.SetActive(false);
+            isObjectActivated = false;
+        }
     }
 
     private void UpdateAnimator()
@@ -149,11 +174,15 @@ public class Player : MonoBehaviour
 
     private void ToggleObjectVisibility()
     {
-        if (objectToShowHide != null)
+        if (objectToShowHide != null && objectToHide != null)
         {
-            objectToShowHide.SetActive(!objectToShowHide.activeSelf);
+            bool objectToShowActive = objectToShowHide.activeSelf;
+
+            objectToShowHide.SetActive(!objectToShowActive);
+            objectToHide.SetActive(objectToShowActive);
         }
     }
+
 
     public void SetUIButtonPressed(bool value)
     {

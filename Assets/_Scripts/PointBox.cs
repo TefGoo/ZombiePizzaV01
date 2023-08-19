@@ -3,44 +3,30 @@ using TMPro;
 
 public class PointBox : MonoBehaviour
 {
-    public int correctFlavorPoints = 10;
-    public TextMeshProUGUI scoreText;
-    public TextMeshProUGUI feedbackText;
-
-    private string requestedFlavor; // Store the requested flavor
-
-    public void SetRequestedFlavor(string flavor)
-    {
-        requestedFlavor = flavor;
-    }
+    public int pointValue = 10;   // The number of points to give to the player
+    public TextMeshProUGUI scoreText;   // Reference to the TMP Text component where the score will be displayed
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("House"))
         {
-            Debug.Log("Delivered Pizza Tag: " + gameObject.tag);
+            // Give points to the player
+            ScoreManager.Instance.AddPoints(pointValue);
+
+            // Display the updated score in the TMP Text component
+            scoreText.text = "$" + ScoreManager.Instance.Score;
+
+            // Deactivate the pizza request object of the NPC
             GameObject houseObject = other.gameObject;
             NpcPizzaRequestObject pizzaRequestComponent = houseObject.GetComponentInChildren<NpcPizzaRequestObject>();
-            if (pizzaRequestComponent != null && pizzaRequestComponent.IsActive())
+            if (pizzaRequestComponent != null)
             {
-                if (requestedFlavor == gameObject.tag)
-                {
-                    ScoreManager.Instance.AddPoints(correctFlavorPoints);
-                    feedbackText.text = "Correct flavor delivered!";
-                    pizzaRequestComponent.DeactivateHouse(); // Hide the house object
-                }
-                else
-                {
-                    feedbackText.text = "Wrong flavor delivered!";
-                }
-
-                feedbackText.gameObject.SetActive(true);
-                scoreText.text = "$ " + ScoreManager.Instance.Score;
-
                 pizzaRequestComponent.DeactivatePizzaRequest();
-
-                Destroy(gameObject);
+                pizzaRequestComponent.DeactivateHouse(); // Deactivate the house GameObject
             }
+
+            // Destroy the box object
+            Destroy(gameObject);
         }
     }
 }

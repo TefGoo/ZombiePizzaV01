@@ -3,6 +3,7 @@ using UnityEngine;
 public class PanelController : MonoBehaviour
 {
     public GameObject panel; // Reference to the panel GameObject
+    public GameObject objectToHide; // Reference to the GameObject you want to hide/show
     private bool panelActive; // Flag to track the panel's active state
 
     private void Update()
@@ -14,6 +15,9 @@ public class PanelController : MonoBehaviour
 
             // Activate or deactivate the panel based on the active state
             panel.SetActive(panelActive);
+
+            // Hide or show the specified GameObject based on the active state of the panel
+            objectToHide.SetActive(!panelActive);
         }
     }
 }

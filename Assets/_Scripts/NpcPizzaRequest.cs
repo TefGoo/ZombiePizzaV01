@@ -3,67 +3,67 @@ using UnityEngine;
 
 public class NpcPizzaRequest : MonoBehaviour
 {
-    public GameObject[] npcObjects;
-    public GameObject pizzaRequestObject;
-    public GameObject timerUI;
+    public GameObject[] npcObjects;  // Array of NPC GameObjects
+    public GameObject pizzaRequestObject; // The object to activate when an NPC requests a pizza
     public TextMeshProUGUI requestText;
-    public TextMeshProUGUI timerText;
-    public TextMeshProUGUI feedbackText;
+    public string noOrdersText = "No pending orders";
 
-    private float minRequestTime = 30f;
-    private float maxRequestTime = 60f;
-    private float nextRequestTime;
+    private float minRequestTime = 30f;  // Minimum time between requests (in seconds)
+    private float maxRequestTime = 60f;  // Maximum time between requests (in seconds)
+    private float nextRequestTime;  // Time when the next request will occur
 
     private NpcPizzaRequestObject currentPizzaRequest;
-    private string[] pizzaFlavors = { "Pepperoni", "Margherita", "Supreme", "Hawaiian", "Vegetarian" };
 
     private void Start()
     {
+        // Deactivate all house objects initially
         foreach (GameObject npcObject in npcObjects)
         {
             DeactivatePizzaRequest(npcObject);
         }
 
+        // Set the initial request time
         SetNextRequestTime();
-        feedbackText.gameObject.SetActive(false);
     }
 
     private void Update()
     {
+        // Check if it's time for the next request
         if (Time.time >= nextRequestTime)
         {
+            // Randomly select an NPC
             GameObject randomNpc = GetRandomNpc();
 
             if (randomNpc != null)
             {
+                // Call the method to handle the pizza request for the selected NPC
                 currentPizzaRequest = randomNpc.GetComponent<NpcPizzaRequestObject>();
                 if (currentPizzaRequest != null)
                 {
-                    currentPizzaRequest.RequestPizza(randomNpc.name); // Request pizza flavor for the NPC
+                    DeliverPizza(randomNpc);
                     SetTimer();
                 }
             }
 
+            // Calculate the time for the next request
             SetNextRequestTime();
         }
 
+        // Check for the timer
         if (currentPizzaRequest != null)
         {
             if (currentPizzaRequest.IsActive() && Time.time >= currentPizzaRequest.TimerEndTime)
             {
+                // The timer has ended, cancel the request and remove 5 score
                 CancelPizzaRequest();
-            }
-            else
-            {
-                timerText.text = Mathf.CeilToInt(currentPizzaRequest.TimerEndTime - Time.time).ToString();
+                ScoreManager.Instance.AddPoints(-5); // Remove 5 score
             }
         }
 
+        // Activate or deactivate the pizza request object based on active requests
         if (currentPizzaRequest == null || !currentPizzaRequest.IsActive())
         {
-            ActivatePizzaRequest(pizzaRequestObject, "No pending orders", "");
-
-            timerUI.SetActive(false);
+            ActivatePizzaRequest(pizzaRequestObject, noOrdersText);
         }
         else
         {
@@ -79,7 +79,6 @@ public class NpcPizzaRequest : MonoBehaviour
     private void SetTimer()
     {
         currentPizzaRequest.StartTimer();
-        timerUI.SetActive(true);
     }
 
     private GameObject GetRandomNpc()
@@ -93,16 +92,19 @@ public class NpcPizzaRequest : MonoBehaviour
         return null;
     }
 
-    private void ActivatePizzaRequest(GameObject npcObject, string flavor, string npcName)
+    private void DeliverPizza(GameObject npc)
+    {
+        ActivatePizzaRequest(npc, npc.name);
+    }
+
+    private void ActivatePizzaRequest(GameObject npcObject, string npcName)
     {
         NpcPizzaRequestObject pizzaRequestComponent = npcObject.GetComponent<NpcPizzaRequestObject>();
         if (pizzaRequestComponent != null)
         {
-            pizzaRequestComponent.ActivatePizzaRequest(flavor, npcName);
-            requestText.text = "Order: " + flavor + " pizza for " + npcName;
+            pizzaRequestComponent.ActivatePizzaRequest(npcName);
         }
     }
-
 
     private void DeactivatePizzaRequest(GameObject npcObject)
     {
@@ -110,7 +112,6 @@ public class NpcPizzaRequest : MonoBehaviour
         if (pizzaRequestComponent != null)
         {
             pizzaRequestComponent.DeactivatePizzaRequest();
-            requestText.text = "No pending orders";
         }
     }
 
@@ -120,8 +121,6 @@ public class NpcPizzaRequest : MonoBehaviour
         {
             currentPizzaRequest.CancelRequest();
             currentPizzaRequest = null;
-
-            timerUI.SetActive(false);
         }
     }
 }

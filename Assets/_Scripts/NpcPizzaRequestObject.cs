@@ -7,36 +7,12 @@ public class NpcPizzaRequestObject : MonoBehaviour
     public TextMeshProUGUI requestText; // Reference to the TMP Text component for NPC name
     public GameObject houseObject;
 
-    private string requestedFlavor; // New variable to store the requested pizza flavor
-    private float timerEndTime;
+    public float TimerEndTime { get; private set; }
     private bool isActive;
 
-    public string RequestedFlavor
+    public void ActivatePizzaRequest(string npcName)
     {
-        get { return requestedFlavor; }
-    }
-
-    public float TimerEndTime
-    {
-        get { return timerEndTime; }
-    }
-
-    public void RequestPizza(string npcName)
-    {
-        requestedFlavor = GetRandomFlavor(); // Get a random pizza flavor
-        ActivatePizzaRequest(npcName, requestedFlavor);
-        StartTimer();
-    }
-
-    private string GetRandomFlavor()
-    {
-        int randomFlavorIndex = Random.Range(0, pizzaFlavors.Length);
-        return pizzaFlavors[randomFlavorIndex];
-    }
-
-    public void ActivatePizzaRequest(string npcName, string flavor)
-    {
-        requestText.text = "Order: " + flavor + " pizza for " + npcName;
+        requestText.text = npcName;
         pizzaRequestObject.SetActive(true);
         houseObject.SetActive(true);
         isActive = true;
@@ -57,12 +33,7 @@ public class NpcPizzaRequestObject : MonoBehaviour
 
     public void StartTimer()
     {
-        timerEndTime = Time.time + GetRandomRequestTime(); // Set timer end time based on your logic
-    }
-
-    private float GetRandomRequestTime()
-    {
-        return Random.Range(minRequestTime, maxRequestTime);
+        TimerEndTime = Time.time + 40f; // 40 seconds timer
     }
 
     public void CancelRequest()
@@ -74,8 +45,4 @@ public class NpcPizzaRequestObject : MonoBehaviour
     {
         return isActive;
     }
-
-    private string[] pizzaFlavors = { "Pepperoni", "Margherita", "Supreme", "Hawaiian", "Vegetarian" };
-    private float minRequestTime = 30f;
-    private float maxRequestTime = 60f;
 }
