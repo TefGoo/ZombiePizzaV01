@@ -5,6 +5,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float walkSpeed = 6f;
     [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float crouchSpeed = 3f;
+    [SerializeField] private GunScript gunScript; // Reference to the other script
+
 
     private float currentSpeed;
     private bool isWalking;
@@ -15,6 +17,9 @@ public class Player : MonoBehaviour
     private bool hasBox;
     private bool hasGun;
     private float originalWalkSpeed;
+    private bool isAttackAnimationPlaying;
+    private float attackAnimationEndTime;
+
 
     private Animator animator;
 
@@ -124,23 +129,36 @@ public class Player : MonoBehaviour
             animator.SetBool(IS_CROUCHING, isCrouching);
         }
 
+        // Attack input handling
         if (Input.GetMouseButtonDown(0) || Input.GetButtonDown("ControllerAttack"))
         {
             isAttacking = true;
+            isAttackAnimationPlaying = true;
             originalWalkSpeed = currentSpeed;
 
-            // Activate the object to show on attack
+            if (hasGun)
+            {
+                // Call the gunScript's method for shooting
+                gunScript.OnPlayerAttack();
+            }
+
             objectToShowOnAttack.SetActive(true);
             activationTime = Time.time;
             isObjectActivated = true;
 
+            attackAnimationEndTime = Time.time + 1f; // Adjust the duration if needed
+
             currentSpeed = currentSpeed / 2f;
             Debug.Log("Attack animation started");
         }
-        if (Input.GetMouseButtonUp(0) || Input.GetButtonUp("ControllerAttack"))
+        if (isAttackAnimationPlaying && Time.time >= attackAnimationEndTime)
         {
             isAttacking = false;
+            isAttackAnimationPlaying = false;
             currentSpeed = isCrouching ? crouchSpeed : originalWalkSpeed;
+            objectToShowOnAttack.SetActive(false);
+            isObjectActivated = false;
+            animator.SetBool(IS_ATTACKING, false);
             Debug.Log("Attack animation stopped");
         }
 
@@ -154,7 +172,6 @@ public class Player : MonoBehaviour
             UpdateAnimator();
         }
 
-        // Check if the object has been active for 2 seconds and deactivate it
         if (isObjectActivated && Time.time - activationTime >= 2f)
         {
             objectToShowOnAttack.SetActive(false);
