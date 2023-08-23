@@ -5,7 +5,7 @@ public class MenuScript : MonoBehaviour
 {
     public void ChangeScene()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("IntroDialogues");
     }
 
     public void CloseGame()

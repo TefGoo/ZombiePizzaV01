@@ -6,6 +6,7 @@ using System.Collections;
 public class WeaponBuyer : MonoBehaviour
 {
     public GameObject weaponPrefab;
+    public GameObject objectToHide; // Add reference to the object you want to hide
     public int weaponCost = 50;
     public Transform spawnPoint;
     public TMP_Text moneyText;
@@ -38,6 +39,11 @@ public class WeaponBuyer : MonoBehaviour
             Instantiate(weaponPrefab, spawnPoint.position, spawnPoint.rotation);
 
             StartCoroutine(MoveObjectSmoothly());
+
+            if (objectToHide != null)
+            {
+                objectToHide.SetActive(false); // Hide the object
+            }
 
             if (audioSource != null)
             {
