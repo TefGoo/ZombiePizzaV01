@@ -10,12 +10,15 @@ public class NpcPizzaRequestObject : MonoBehaviour
     public float TimerEndTime { get; private set; }
     private bool isActive;
 
+    private bool hasDelivered; // Flag to track whether the pizza has been delivered
+
     public void ActivatePizzaRequest(string npcName)
     {
         requestText.text = npcName;
         pizzaRequestObject.SetActive(true);
         houseObject.SetActive(true);
         isActive = true;
+        hasDelivered = false; // Reset the delivery status
     }
 
     public void DeactivatePizzaRequest()
@@ -24,6 +27,7 @@ public class NpcPizzaRequestObject : MonoBehaviour
         pizzaRequestObject.SetActive(false);
         houseObject.SetActive(false);
         isActive = false;
+        hasDelivered = false; // Reset the delivery status
     }
 
     public void DeactivateHouse()
@@ -44,5 +48,17 @@ public class NpcPizzaRequestObject : MonoBehaviour
     public bool IsActive()
     {
         return isActive;
+    }
+
+    // Method to mark the pizza as delivered
+    public void MarkDelivered()
+    {
+        hasDelivered = true;
+    }
+
+    // Method to check if the pizza has been delivered on time
+    public bool HasDeliveredOnTime()
+    {
+        return isActive && hasDelivered && Time.time < TimerEndTime;
     }
 }

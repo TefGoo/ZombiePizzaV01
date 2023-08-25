@@ -6247,7 +6247,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00:40
+  m_text: '-'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dd8a3220b16ff494eb40256b39979242, type: 2}
   m_sharedMaterial: {fileID: -6008035059909165201, guid: dd8a3220b16ff494eb40256b39979242,
@@ -51135,7 +51135,7 @@ MonoBehaviour:
   - {fileID: 558144945}
   pizzaRequestObject: {fileID: 727448716}
   requestText: {fileID: 1108543336}
-  noOrdersText: No pending orders
+  timerText: {fileID: 294413611}
 --- !u!4 &1883331546
 Transform:
   m_ObjectHideFlags: 0
