@@ -17,6 +17,7 @@ public class WeaponBuyer : MonoBehaviour
     private ScoreManager scoreManager;
     private Vector3 originalObjectPosition;
     private bool isMoving = false;
+    private bool isMovingObject = false;
 
     private void Start()
     {
@@ -30,15 +31,12 @@ public class WeaponBuyer : MonoBehaviour
             audioSource = GetComponent<AudioSource>();
         }
     }
-
     public void BuyWeaponAndPerformActions()
     {
-        if (scoreManager.Score >= weaponCost && !isMoving)
+        if (scoreManager.Score >= weaponCost && !isMovingObject)
         {
             scoreManager.AddPoints(-weaponCost);
             Instantiate(weaponPrefab, spawnPoint.position, spawnPoint.rotation);
-
-            StartCoroutine(MoveObjectSmoothly());
 
             if (objectToHide != null)
             {
@@ -49,20 +47,31 @@ public class WeaponBuyer : MonoBehaviour
             {
                 audioSource.Play(); // Play the audio
             }
+
+            // Move the object
+            MoveObjectSmoothly();
+
+            // Update the money text UI
+            UpdateMoneyText();
         }
     }
-
-    private IEnumerator MoveObjectSmoothly()
+    private void MoveObjectSmoothly()
     {
-        isMoving = true;
+        isMovingObject = true;
 
         Vector3 targetPosition = objectToMove.position + new Vector3(0f, moveDistance, 0f);
+        StartCoroutine(MoveObjectCoroutine(targetPosition));
+    }
+
+    private IEnumerator MoveObjectCoroutine(Vector3 targetPosition)
+    {
         float elapsedTime = 0f;
         float duration = 1.0f;
+        Vector3 originalPosition = objectToMove.position;
 
         while (elapsedTime < duration)
         {
-            objectToMove.position = Vector3.Lerp(objectToMove.position, targetPosition, elapsedTime / duration);
+            objectToMove.position = Vector3.Lerp(originalPosition, targetPosition, elapsedTime / duration);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
@@ -73,12 +82,12 @@ public class WeaponBuyer : MonoBehaviour
 
         while (elapsedTime < duration)
         {
-            objectToMove.position = Vector3.Lerp(objectToMove.position, originalObjectPosition, elapsedTime / duration);
+            objectToMove.position = Vector3.Lerp(objectToMove.position, originalPosition, elapsedTime / duration);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        isMoving = false;
+        isMovingObject = false;
     }
 
     private void UpdateMoneyText()
@@ -88,4 +97,5 @@ public class WeaponBuyer : MonoBehaviour
             moneyText.text = "$" + scoreManager.Score.ToString();
         }
     }
+
 }

@@ -1,3 +1,4 @@
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -15,6 +16,7 @@ public class ZombieAI : MonoBehaviour
 
     public float towerDefenseSpeed = 2f; // Speed when in tower defense mode
     public float followPlayerSpeed = 4f; // Speed when following the player
+    [SerializeField] CinemachineImpulseSource _impulseSource;
 
     private enum ZombieState
     {
@@ -186,9 +188,15 @@ public class ZombieAI : MonoBehaviour
             PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
+                Invoke("ScreenShake", 0f);
                 playerHealth.TakeDamage(1);
             }
         }
+    }
+
+    private void ScreenShake()
+    {
+        _impulseSource.GenerateImpulse();
     }
 
     private void SwitchToAI()
