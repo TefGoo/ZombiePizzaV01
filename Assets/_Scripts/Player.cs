@@ -146,7 +146,7 @@ public class Player : MonoBehaviour
             activationTime = Time.time;
             isObjectActivated = true;
 
-            attackAnimationEndTime = Time.time + 1f; // Adjust the duration if needed
+            attackAnimationEndTime = Time.time + .65f; // Adjust the duration if needed
 
             currentSpeed = currentSpeed / 2f;
             Debug.Log("Attack animation started");
