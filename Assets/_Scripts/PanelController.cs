@@ -6,6 +6,13 @@ public class PanelController : MonoBehaviour
     public GameObject objectToHide; // Reference to the GameObject you want to hide/show
     private bool panelActive; // Flag to track the panel's active state
 
+
+    private void Start()
+    {
+        // Deactivate the panel GameObject at the start
+        panel.SetActive(false);
+        panelActive = false; // Make sure the panelActive flag matches the initial state
+    }
     private void Update()
     {
         // Check for Tab key press on the keyboard or Options button press on the controller

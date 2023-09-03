@@ -113,6 +113,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pizzaRequestObject: {fileID: 3784869504298422946}
+  requestText: {fileID: 0}
+  houseObject: {fileID: 0}
 --- !u!1 &3784869504298422946
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,6 +127,7 @@ GameObject:
   - component: {fileID: 3784869504298422950}
   - component: {fileID: 3784869504298422949}
   - component: {fileID: 3784869504298422948}
+  - component: {fileID: 1240427621040105112}
   m_Layer: 7
   m_Name: MinimapIcon
   m_TagString: Untagged
@@ -211,3 +214,17 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1240427621040105112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3784869504298422946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcab1a4327bb916488b7069eecadb132, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floatAmplitudeZ: 0.8
+  floatSpeedZ: 0.8

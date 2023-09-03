@@ -7,7 +7,8 @@ public class RagdollOnOff : MonoBehaviour
     public BoxCollider mainCollider;
     public GameObject ZombieRig;
     public Animator ZombieAnimator;
-    public ZombieAI zombieAI; // Reference to the ZombieAI script
+    [SerializeField]
+    private MonoBehaviour enemyAI; // Serialized field for the enemy AI script
 
     private void Start()
     {
@@ -20,7 +21,7 @@ public class RagdollOnOff : MonoBehaviour
         if (collision.gameObject.tag == "RDHit")
         {
             RagdollModeOn();
-            DeactivateZombieAI(); // Deactivate ZombieAI script
+            DeactivateEnemyAI(); // Deactivate ZombieAI script
             StartCoroutine(DestroyZombieAfterDelay());
         }
     }
@@ -68,11 +69,11 @@ public class RagdollOnOff : MonoBehaviour
         GetComponent<Rigidbody>().isKinematic = false;
     }
 
-    void DeactivateZombieAI()
+    void DeactivateEnemyAI()
     {
-        if (zombieAI != null)
+        if (enemyAI != null)
         {
-            zombieAI.enabled = false; // Disable the ZombieAI script
+            enemyAI.enabled = false; // Disable the specific enemy AI script
         }
     }
 

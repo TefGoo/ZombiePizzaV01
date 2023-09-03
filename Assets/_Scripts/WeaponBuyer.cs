@@ -13,12 +13,12 @@ public class WeaponBuyer : MonoBehaviour
     public Transform objectToMove;
     public float moveDistance = 0.8f;
     public AudioSource audioSource;
+    public TMP_Text notificationText; // Add reference to the TMP_Text for displaying notifications
 
     private ScoreManager scoreManager;
     private Vector3 originalObjectPosition;
     private bool isMoving = false;
     private bool isMovingObject = false;
-
     private void Start()
     {
         scoreManager = ScoreManager.Instance;
@@ -29,6 +29,11 @@ public class WeaponBuyer : MonoBehaviour
         {
             // Attempt to find the AudioSource on the object
             audioSource = GetComponent<AudioSource>();
+        }
+
+        if (notificationText != null)
+        {
+            notificationText.text = ""; // Hide the notification text at the start
         }
     }
     public void BuyWeaponAndPerformActions()
@@ -53,6 +58,28 @@ public class WeaponBuyer : MonoBehaviour
 
             // Update the money text UI
             UpdateMoneyText();
+        }
+        else
+        {
+            ShowNotification("Not enough money"); // Show the notification text
+        }
+    }
+
+    private void ShowNotification(string message)
+    {
+        if (notificationText != null)
+        {
+            notificationText.text = message;
+            StartCoroutine(HideNotificationAfterDelay());
+        }
+    }
+
+    private IEnumerator HideNotificationAfterDelay()
+    {
+        yield return new WaitForSeconds(2.0f); // Adjust the delay time as needed
+        if (notificationText != null)
+        {
+            notificationText.text = ""; // Clear the notification text
         }
     }
     private void MoveObjectSmoothly()

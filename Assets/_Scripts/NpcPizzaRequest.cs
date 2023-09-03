@@ -1,3 +1,4 @@
+using UnityEngine.UI;
 using TMPro;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ public class NpcPizzaRequest : MonoBehaviour
     private float nextRequestTime;  // Time when the next request will occur
 
     private NpcPizzaRequestObject currentPizzaRequest;
+    public Image uiImageToColor;
 
     private void Start()
     {
@@ -74,6 +76,17 @@ public class NpcPizzaRequest : MonoBehaviour
         {
             DeactivatePizzaRequest(pizzaRequestObject);
         }
+
+        if (currentPizzaRequest == null || !currentPizzaRequest.IsActive())
+        {
+            ActivatePizzaRequest(pizzaRequestObject, "No pending orders");
+            uiImageToColor.color = Color.white; // Set the UI Image color to white
+        }
+        else
+        {
+            DeactivatePizzaRequest(pizzaRequestObject);
+            uiImageToColor.color = Color.red; // Set the UI Image color to red
+        }
     }
 
     private void SetNextRequestTime()
@@ -110,6 +123,18 @@ public class NpcPizzaRequest : MonoBehaviour
         if (pizzaRequestComponent != null)
         {
             pizzaRequestComponent.ActivatePizzaRequest(message);
+
+            if (uiImageToColor != null)
+            {
+                if (message == "No pending orders")
+                {
+                    uiImageToColor.color = Color.white; // Set the UI Image color to white
+                }
+                else if (message.StartsWith("Pizza for"))
+                {
+                    uiImageToColor.color = Color.red; // Set the UI Image color to red
+                }
+            }
         }
     }
 
@@ -119,8 +144,15 @@ public class NpcPizzaRequest : MonoBehaviour
         if (pizzaRequestComponent != null)
         {
             pizzaRequestComponent.DeactivatePizzaRequest();
+
+            if (uiImageToColor != null)
+            {
+                uiImageToColor.color = Color.white; // Reset the UI Image color to white
+            }
         }
     }
+
+
 
     private void CancelPizzaRequest()
     {
@@ -130,6 +162,7 @@ public class NpcPizzaRequest : MonoBehaviour
             currentPizzaRequest = null;
         }
     }
+
     private void HandleRequestCompletion()
     {
         if (currentPizzaRequest != null)

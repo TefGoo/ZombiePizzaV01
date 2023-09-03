@@ -46,7 +46,6 @@ public class EnemySpawner : MonoBehaviour
         if (zombieAI != null)
         {
             zombieAI.enabled = true;
-            zombieAI.destination = destination;
         }
         else
         {

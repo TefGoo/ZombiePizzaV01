@@ -6,9 +6,7 @@ public class ZombieAI : MonoBehaviour
 {
     public Animator animator;
     public Transform player;
-    public Transform destination; // Destination for tower defense behavior
-    public Transform destination1; // First destination for tower defense behavior
-    public Transform destination2; // Second destination for tower defense behavior
+    public Transform[] destinations; // Array of destinations for tower defense behavior
     public float towerDefenseDistance = 10f; // Distance at which the zombie switches to tower defense behavior
     public float attackDistance = 1.5f;
     public float followSpeed = 2f;
@@ -31,12 +29,14 @@ public class ZombieAI : MonoBehaviour
     private bool isAttacking;
 
     private NavMeshAgent agent;
+    private int currentDestinationIndex = 0; // Index of the current destination
 
     private void Start()
     {
         animator = GetComponent<Animator>();
         currentIdleTime = Random.Range(1f, 3f);
         agent = GetComponentInParent<NavMeshAgent>(); // Find NavMeshAgent in parent object
+        ChooseDestination(); // Start by choosing the first destination
     }
 
     private void Update()
@@ -67,24 +67,13 @@ public class ZombieAI : MonoBehaviour
             currentState = ZombieState.TowerDefense;
             animator.SetBool("IsIdle", false);
             animator.SetBool("IsTowerDefense", true);
-            ChooseClosestDestination();
         }
     }
 
-    private void ChooseClosestDestination()
+    private void ChooseDestination()
     {
-        // Check which destination is closer and set it as the new destination
-        float distanceToDestination1 = Vector3.Distance(transform.position, destination1.position);
-        float distanceToDestination2 = Vector3.Distance(transform.position, destination2.position);
-
-        if (distanceToDestination1 < distanceToDestination2)
-        {
-            agent.SetDestination(destination1.position);
-        }
-        else
-        {
-            agent.SetDestination(destination2.position);
-        }
+        // Use the current destination index
+        agent.SetDestination(destinations[currentDestinationIndex].position);
     }
 
     private void TowerDefenseState()
@@ -95,10 +84,9 @@ public class ZombieAI : MonoBehaviour
         }
         else if (!agent.hasPath || agent.remainingDistance <= agent.stoppingDistance)
         {
-            currentState = ZombieState.Idle;
-            animator.SetBool("IsTowerDefense", false);
-            animator.SetBool("IsIdle", true);
-            currentIdleTime = Random.Range(1f, 3f);
+            // Increment the destination index and choose the next destination
+            currentDestinationIndex = (currentDestinationIndex + 1) % destinations.Length;
+            ChooseDestination();
         }
         else
         {

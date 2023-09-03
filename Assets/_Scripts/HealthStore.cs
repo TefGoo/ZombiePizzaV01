@@ -46,6 +46,11 @@ public class HealthStore : MonoBehaviour
         }
     }
 
+    public void TakeDamage(int damageAmount)
+    {
+        // Update the building's health (assuming you have a function for this)
+    }
+
     private void UpdateMoneyText()
     {
         if (moneyText != null && scoreManager != null)
