@@ -5,6 +5,10 @@ public class MenuScript : MonoBehaviour
 {
     public void ChangeScene()
     {
+        SceneManager.LoadScene("SampleScene");
+    }
+    public void intro()
+    {
         SceneManager.LoadScene("IntroDialogues");
     }
 

@@ -4,7 +4,6 @@ public class EnemySpawner : MonoBehaviour
 {
     public GameObject enemyPrefab; // Prefab of the enemy
     public Transform[] spawnPoints; // Array of spawn points for the enemies
-    public Transform destination; // Destination for the enemies to walk towards
 
     public float spawnInterval = 12f; // Spawn interval
 
@@ -23,7 +22,6 @@ public class EnemySpawner : MonoBehaviour
             nextSpawnTime = Time.time + spawnInterval; // Update the next spawn time
         }
     }
-
     private void SpawnEnemy()
     {
         if (enemyPrefab == null)
@@ -41,11 +39,11 @@ public class EnemySpawner : MonoBehaviour
         Transform spawnPoint = GetRandomSpawnPoint();
         GameObject enemy = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
 
-        // Activate ZombieAI component
+        // Enable ZombieAI component
         ZombieAI zombieAI = enemy.GetComponentInChildren<ZombieAI>();
         if (zombieAI != null)
         {
-            zombieAI.enabled = true;
+            zombieAI.enabled = true; // Enable the ZombieAI component
         }
         else
         {

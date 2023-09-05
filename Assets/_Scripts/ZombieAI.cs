@@ -34,9 +34,9 @@ public class ZombieAI : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
-        currentIdleTime = Random.Range(1f, 3f);
+        currentIdleTime = Random.Range(1f, 2f);
         agent = GetComponentInParent<NavMeshAgent>(); // Find NavMeshAgent in parent object
-        ChooseDestination(); // Start by choosing the first destination
+        // Do not choose the initial destination here.
     }
 
     private void Update()
@@ -75,6 +75,7 @@ public class ZombieAI : MonoBehaviour
         // Use the current destination index
         agent.SetDestination(destinations[currentDestinationIndex].position);
     }
+    private bool hasLoggedDestination = false; // Add this variable
 
     private void TowerDefenseState()
     {
@@ -84,9 +85,16 @@ public class ZombieAI : MonoBehaviour
         }
         else if (!agent.hasPath || agent.remainingDistance <= agent.stoppingDistance)
         {
-            // Increment the destination index and choose the next destination
-            currentDestinationIndex = (currentDestinationIndex + 1) % destinations.Length;
-            ChooseDestination();
+            // Choose a random destination from the array
+            int randomDestinationIndex = Random.Range(0, destinations.Length);
+            agent.SetDestination(destinations[randomDestinationIndex].position);
+
+            // Log the selected destination index only if it hasn't been logged before
+            if (!hasLoggedDestination)
+            {
+                Debug.Log("Selected destination index: " + randomDestinationIndex);
+                hasLoggedDestination = true; // Set the flag to true to prevent further logging
+            }
         }
         else
         {
@@ -97,6 +105,7 @@ public class ZombieAI : MonoBehaviour
             animator.SetBool("IsIdle", false);
         }
     }
+
 
     private void FollowPlayerState()
     {
