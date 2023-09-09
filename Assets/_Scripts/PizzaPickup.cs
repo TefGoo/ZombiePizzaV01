@@ -76,6 +76,16 @@ public class PizzaPickup : MonoBehaviour
         isEquipped = true;
         player.SetHasBox(true);
         player.SetHasGun(false);
+        // Disable the "FloatingObject" script component
+        FloatingObject floatingObject = pizza.GetComponent<FloatingObject>();
+        if (floatingObject != null)
+        {
+            floatingObject.enabled = false;
+        }
+
+        isEquipped = true;
+        player.SetHasBox(true);
+        player.SetHasGun(false);
     }
 
     void EquipGun()
@@ -87,6 +97,16 @@ public class PizzaPickup : MonoBehaviour
         pizza.transform.SetParent(pizzaParent);
         pizza.GetComponent<Rigidbody>().isKinematic = true;
         pizza.GetComponent<BoxCollider>().enabled = false;
+        isEquipped = true;
+        player.SetHasBox(false);
+        player.SetHasGun(true);
+        // Disable the "FloatingObject" script component
+        FloatingObject floatingObject = pizza.GetComponent<FloatingObject>();
+        if (floatingObject != null)
+        {
+            floatingObject.enabled = false;
+        }
+
         isEquipped = true;
         player.SetHasBox(false);
         player.SetHasGun(true);

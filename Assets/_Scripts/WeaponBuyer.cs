@@ -19,6 +19,8 @@ public class WeaponBuyer : MonoBehaviour
     private Vector3 originalObjectPosition;
     private bool isMoving = false;
     private bool isMovingObject = false;
+    public GameObject particleSystemPrefab;
+
     private void Start()
     {
         scoreManager = ScoreManager.Instance;
@@ -41,7 +43,13 @@ public class WeaponBuyer : MonoBehaviour
         if (scoreManager.Score >= weaponCost && !isMovingObject)
         {
             scoreManager.AddPoints(-weaponCost);
-            Instantiate(weaponPrefab, spawnPoint.position, spawnPoint.rotation);
+            GameObject weaponInstance = Instantiate(weaponPrefab, spawnPoint.position, spawnPoint.rotation);
+
+            // Instantiate the particle system at the weapon's position and rotation
+            if (particleSystemPrefab != null)
+            {
+                Instantiate(particleSystemPrefab, weaponInstance.transform.position, weaponInstance.transform.rotation);
+            }
 
             if (objectToHide != null)
             {
@@ -64,6 +72,7 @@ public class WeaponBuyer : MonoBehaviour
             ShowNotification("Not enough money"); // Show the notification text
         }
     }
+
 
     private void ShowNotification(string message)
     {

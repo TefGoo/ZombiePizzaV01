@@ -1,12 +1,14 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+
 public class SpawnOnTrigger : MonoBehaviour
 {
     public string spawnButton;
     public GameObject prefab;
     public Transform spawnPoint;
-    public TextMeshProUGUI countdownText; // Reference to your TMP text component
+    public TextMeshProUGUI countdownText;
+    public AudioSource spawnSound; // Reference to the AudioSource component
 
     private bool playerInside;
     private bool spawning;
@@ -15,7 +17,7 @@ public class SpawnOnTrigger : MonoBehaviour
 
     private void Start()
     {
-        countdownText.gameObject.SetActive(false); // Hide the text at the start of the game
+        countdownText.gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -59,6 +61,9 @@ public class SpawnOnTrigger : MonoBehaviour
 
         countdownText.text = "Pizza is ready!";
         yield return new WaitForSeconds(1f);
+
+        // Play the spawn sound effect
+        spawnSound.Play();
 
         Instantiate(prefab, spawnPoint.position, Quaternion.identity);
         Debug.Log("New Pizza baked!");

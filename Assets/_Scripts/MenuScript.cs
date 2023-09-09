@@ -7,9 +7,18 @@ public class MenuScript : MonoBehaviour
     {
         SceneManager.LoadScene("SampleScene");
     }
-    public void intro()
+    public void Intro()
     {
         SceneManager.LoadScene("IntroDialogues");
+    }
+    public void Back()
+    {
+        SceneManager.LoadScene("TitleScene");
+    }
+
+    public void Credits()
+    {
+        SceneManager.LoadScene("Credits");
     }
 
     public void CloseGame()

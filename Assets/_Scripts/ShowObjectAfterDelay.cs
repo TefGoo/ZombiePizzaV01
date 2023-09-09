@@ -4,6 +4,7 @@ using System.Collections;
 public class ShowObjectAfterDelay : MonoBehaviour
 {
     public GameObject objectToShow; // Drag the GameObject you want to show in the Inspector
+    public float delay = 3f;       // The delay in seconds before showing the object
 
     private void Start()
     {
@@ -19,7 +20,7 @@ public class ShowObjectAfterDelay : MonoBehaviour
 
     private IEnumerator ShowObjectDelayed()
     {
-        yield return new WaitForSeconds(3f); // Wait for 3 seconds
+        yield return new WaitForSeconds(delay); // Wait for the specified delay
 
         // Activate the GameObject after the delay
         if (objectToShow != null)
