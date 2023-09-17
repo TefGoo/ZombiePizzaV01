@@ -1182,7 +1182,7 @@ AnimatorStateMachine:
     m_Position: {x: 600, y: 380, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8272085978674954343}
-    m_Position: {x: 600, y: 120, z: 0}
+    m_Position: {x: 680, y: 130, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4306544226718623947}
     m_Position: {x: 10, y: 120, z: 0}
@@ -1218,7 +1218,7 @@ AnimatorStateMachine:
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 1010, y: 0, z: 0}
   m_EntryPosition: {x: -450, y: 670, z: 0}
-  m_ExitPosition: {x: 920, y: 110, z: 0}
+  m_ExitPosition: {x: 1010, y: 80, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: -3685319682189483658}
 --- !u!1101 &-84302243600506482
@@ -2175,7 +2175,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: AttackGun
-  m_Speed: 2.2
+  m_Speed: 2.1
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -8581722198425492066}

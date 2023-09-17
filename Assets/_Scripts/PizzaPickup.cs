@@ -14,7 +14,9 @@ public class PizzaPickup : MonoBehaviour
     public GameObject pizza;
     public Transform pizzaParent;
     public Player player;
-    public TextMeshProUGUI messageText;
+    public TextMeshProUGUI messageText; // Reference to your message TMP Text
+    public TextMeshProUGUI ammoText;    // Reference to your ammo TMP Text
+
     private bool isEquipped = false;
 
     void Start()
@@ -32,7 +34,19 @@ public class PizzaPickup : MonoBehaviour
                 Drop();
             }
         }
+
+        // Check if the player has the gun and update ammo text visibility accordingly
+        if (player.HasGun())
+        {
+            ammoText.gameObject.SetActive(true);
+        }
+        else
+        {
+            ammoText.gameObject.SetActive(false);
+        }
     }
+
+
 
     private void OnTriggerStay(Collider other)
     {

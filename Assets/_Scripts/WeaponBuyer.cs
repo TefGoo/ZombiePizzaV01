@@ -43,6 +43,14 @@ public class WeaponBuyer : MonoBehaviour
         if (scoreManager.Score >= weaponCost && !isMovingObject)
         {
             scoreManager.AddPoints(-weaponCost);
+
+            // Call the BuyAmmo method from the AmmoManager
+            AmmoManager ammoManager = FindObjectOfType<AmmoManager>();
+            if (ammoManager != null)
+            {
+                ammoManager.BuyAmmo();
+            }
+
             GameObject weaponInstance = Instantiate(weaponPrefab, spawnPoint.position, spawnPoint.rotation);
 
             // Instantiate the particle system at the weapon's position and rotation
